@@ -1,0 +1,44 @@
+open
+piece of x = 5.2..
+piece of y = 3..
+piece of z = 10..
+pieces[] of r = [1,  2]..
+crumb of a = 1.2..
+
+table of something = [
+    piece of shit..
+    piece of meat..
+    pieces[] of another..
+]..
+somethings[] of ooo = [
+    [
+        shit = 1..
+    ],
+    [
+        meat = 2..
+    ]
+]..
+
+something of ro = [
+    shit = 1..
+    meat = 2..
+    another = [1, 2, 3]..
+]..
+
+# comment line
+prepare piece of addOne (piece of v) {
+    pieces[] of r = [y,  2]..
+    bill("hello world")..
+    piece of i = r[1]..
+
+
+    # ++r[1] += 2101..
+    ro[shit] = 1..
+    pieces[] of assssssssss = [222222222, " "]..
+    serve v..
+}
+piece of start () {
+    bill("dsadadsada..\"asdsad")..
+    serve 0..
+}
+close
