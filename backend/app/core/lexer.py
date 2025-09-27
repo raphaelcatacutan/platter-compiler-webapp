@@ -1,259 +1,500 @@
-# platter_lexer.py
-# Character-by-character lexer for Platter language
-import sys
-
-KEYWORDS = {
-    # scalars
-    "piece", "crumb", "sip", "feast", "flag", "character", "table",
-
-    # arrays
-    "pieces[]", "crumbs[]", "sips[]", "feasts[]", "flags[]", "characters[]",
-
-    # program structure
-    "open", "close", "prepare", "start", "serve", "of", "none",
-
-    # control flow
-    "check", "alt", "instead", "menu", "choice", "usual",
-    "pass", "repeat", "order", "next", "stop",
-
-    # I/O
-    "bill", "take",
-
-    # literals
-    "up", "down",
-}
-
-
-TWO_CHAR_OPS = {"==", "!=", "<=", ">=", "++", "--", "+=", "-=", "*=", "/=", "%="}
-SINGLE_CHAR_OPS = {"+", "-", "*", "/", "%", ">", "<", "=", "!"}
-SYMBOLS = {"{", "}", "(", ")", ",", ":", "[" , "]"}
-ASSIGN_OPS = {"=", "+=", "-=", "*=", "/=", "%=", ".="}
-
 class Token:
     def __init__(self, type_, value, line, col):
         self.type = type_
         self.value = value
         self.line = line
         self.col = col
-    def __repr__(self):
-        return f"Token({self.type!r}, {self.value!r})"
 
-class LexerError(Exception):
-    pass
+    def __repr__(self):
+        return f"Token({self.type}, {self.value}, line={self.line}, col={self.col})"
+
 
 class Lexer:
     def __init__(self, text):
-        self.text = text or ""
+        self.text = text
         self.pos = 0
-        self.length = len(self.text)
         self.line = 1
         self.col = 1
-        self.current = self.text[0] if self.length > 0 else None
-
-    # --- low-level helpers ---
-    def peek(self, n=1):
-        idx = self.pos + n
-        return self.text[idx] if idx < self.length else None
+        self.current = self.text[self.pos] if self.text else None
 
     def advance(self):
         if self.current == "\n":
             self.line += 1
-            self.col = 0
+            self.col = 1
+        else:
+            self.col += 1
         self.pos += 1
-        self.col += 1
-        self.current = self.text[self.pos] if self.pos < self.length else None
+        self.current = self.text[self.pos] if self.pos < len(self.text) else None
 
-    def make_error(self, message):
-        raise LexerError(f"{message} at {self.line}:{self.col}")
-
-    # --- skipping whitespace & comments ---
-    def skip_whitespace_and_comments(self):
-        while self.current is not None:
-            if self.current.isspace():
-                self.advance()
-                continue
-            # comments start with # and go to end of line (docs use #)
-            if self.current == "#":
-                while self.current is not None and self.current != "\n":
-                    self.advance()
-                continue
-            break
-
-    # --- token readers ---
-    def read_identifier_or_keyword(self):
-        start_col = self.col
-        result = []
-        while self.current is not None and (self.current.isalnum() or self.current == "_"):
-            result.append(self.current)
+    def read_full_identifier(self, acc, start_col):
+        while self.current is not None and self.current.isalnum():
+            acc += self.current
             self.advance()
-        # check for immediate [] (no whitespace) to accept characters[] token
-        if self.current == "[" and self.peek(1) == "]":
-            # consume the brackets
-            result.append("[]")
-            self.advance(); self.advance()
-        text = "".join(result)
-        if text in KEYWORDS:
-            return Token("KEYWORD", text, self.line, start_col)
-        return Token("IDENTIFIER", text, self.line, start_col)
+        return Token("IDENTIFIER", acc, self.line, start_col)
 
-    def read_number(self):
-        """
-        Read a numeric literal. Rules (lexer-level):
-        - Must start with digit(s).
-        - If there's a '.' after digits: treat as decimal only if the next char after '.' is a digit.
-          If the '.' is followed by another '.' (terminator) we do NOT consume it here.
-        """
-        start_col = self.col
-        int_part = []
-        while self.current is not None and self.current.isdigit():
-            int_part.append(self.current)
-            self.advance()
-        # possible decimal
-        if self.current == ".":
-            # if next is '.' then this is not a decimal point, leave the '.' for terminator handling
-            if self.peek(1) == ".":
-                return Token("NUMBER", "".join(int_part), self.line, start_col)
-            # if next is digit -> decimal
-            if self.peek(1) is not None and self.peek(1).isdigit():
-                # consume dot
-                int_part.append(".")
-                self.advance()
-                frac_part = []
-                while self.current is not None and self.current.isdigit():
-                    frac_part.append(self.current)
-                    self.advance()
-                if len(frac_part) == 0:
-                    self.make_error("Invalid numeric literal (no digits after decimal point)")
-                int_part.extend(frac_part)
-                return Token("NUMBER", "".join(int_part), self.line, start_col)
-            # if next is something else (like whitespace or letter), this is an invalid '5.' form
-            self.make_error("Invalid numeric literal (trailing single dot). Did you mean '..' or a decimal with digits after the dot?")
-        return Token("NUMBER", "".join(int_part), self.line, start_col)
-
-    def read_string(self):
-        """
-        Reads double-quoted string. Supports recognized escape sequences \n, \t, \\, \", \'
-        """
-        quote = self.current
-        start_col = self.col
-        self.advance()  # skip opening quote
-        result = []
-        while self.current is not None and self.current != quote:
-            if self.current == "\\":
-                # escape
-                nxt = self.peek(1)
-                if nxt is None:
-                    self.make_error("Unfinished escape in string")
-                # consume backslash
-                self.advance()
-                esc = self.current
-                if esc == "n":
-                    result.append("\n")
-                elif esc == "t":
-                    result.append("\t")
-                elif esc == "\\":
-                    result.append("\\")
-                elif esc == "\"":
-                    result.append("\"")
-                elif esc == "'":
-                    result.append("'")
-                else:
-                    # unrecognized escape: docs say treat as raw text — we'll keep the backslash + char
-                    result.append("\\" + esc)
-                self.advance()
-            else:
-                result.append(self.current)
-                self.advance()
-        if self.current != quote:
-            self.make_error("Unterminated string literal")
-        self.advance()  # skip closing quote
-        return Token("STRING", "".join(result), self.line, start_col)
-
-    def read_char(self):
-        """
-        Reads single-quoted character literal. Per docs: must be exactly one character and NOT an escape
-        """
-        start_col = self.col
-        self.advance()  # skip opening single quote
-        if self.current is None:
-            self.make_error("Unterminated character literal")
-        ch = self.current
-        # disallow whitespace or backslash escapes in character (docs)
-        if ch.isspace() or ch == "\\":
-            self.make_error("Invalid character literal (whitespace or escape not allowed)")
-        self.advance()
-        if self.current != "'":
-            self.make_error("Character literal must be single character enclosed in single quotes")
-        self.advance()  # skip closing quote
-        return Token("CHAR", ch, self.line, start_col)
-
-    # --- main scanner ---
     def get_next_token(self):
-        self.skip_whitespace_and_comments()
+        while self.current is not None and self.current.isspace():
+            self.advance()
+
         if self.current is None:
-            return Token("EOF", None, self.line, self.col)
+            return None
 
-        # Terminator: ..
-        if self.current == ".":
-            if self.peek(1) == ".":
-                start_col = self.col
-                self.advance(); self.advance()
-                return Token("TERMINATOR", "..", self.line, start_col)
-            # stray single dot or Unicode ellipsis are errors
-            if ord(self.current) == 0x2026:  # guard for unicode ellipsis (just in case)
-                self.make_error("Unicode ellipsis '…' detected — replace with '..'")
-            self.make_error("Unexpected single '.' (Platter statement terminator is '..')")
+        start_col = self.col
 
-        # identifier / keyword
-        if self.current.isalpha() or self.current == "_":
-            return self.read_identifier_or_keyword()
+        # -------------------------------------------------------------------
+        # p: piece, pass, prepare
+        if self.current == "p":
+            acc = "p"; self.advance()
+            if self.current == "i":  # piece
+                acc += "i"; self.advance()
+                if self.current == "e":
+                    acc += "e"; self.advance()
+                    if self.current == "c":
+                        acc += "c"; self.advance()
+                        if self.current == "e":
+                            acc += "e"; self.advance()
+                            if self.current is None or not self.current.isalnum():
+                                return Token("KEYWORD", acc, self.line, start_col)
+                            return self.read_full_identifier(acc, start_col)
+                        return self.read_full_identifier(acc, start_col)
+                    return self.read_full_identifier(acc, start_col)
+                return self.read_full_identifier(acc, start_col)
+            elif self.current == "a":  # pass
+                acc += "a"; self.advance()
+                if self.current == "s":
+                    acc += "s"; self.advance()
+                    if self.current == "s":
+                        acc += "s"; self.advance()
+                        if self.current is None or not self.current.isalnum():
+                            return Token("KEYWORD", acc, self.line, start_col)
+                        return self.read_full_identifier(acc, start_col)
+                    return self.read_full_identifier(acc, start_col)
+                return self.read_full_identifier(acc, start_col)
+            elif self.current == "r":  # prepare
+                acc += "r"; self.advance()
+                if self.current == "e":
+                    acc += "e"; self.advance()
+                    if self.current == "p":
+                        acc += "p"; self.advance()
+                        if self.current == "a":
+                            acc += "a"; self.advance()
+                            if self.current == "r":
+                                acc += "r"; self.advance()
+                                if self.current == "e":
+                                    acc += "e"; self.advance()
+                                    if self.current is None or not self.current.isalnum():
+                                        return Token("KEYWORD", acc, self.line, start_col)
+                                    return self.read_full_identifier(acc, start_col)
+                                return self.read_full_identifier(acc, start_col)
+                            return self.read_full_identifier(acc, start_col)
+                        return self.read_full_identifier(acc, start_col)
+                    return self.read_full_identifier(acc, start_col)
+                return self.read_full_identifier(acc, start_col)
+            return self.read_full_identifier(acc, start_col)
 
-        # number
+        # -------------------------------------------------------------------
+        # c: crumb, character, check, choice, close
+        if self.current == "c":
+            acc = "c"; self.advance()
+            if self.current == "r":  # crumb
+                acc += "r"; self.advance()
+                if self.current == "u":
+                    acc += "u"; self.advance()
+                    if self.current == "m":
+                        acc += "m"; self.advance()
+                        if self.current == "b":
+                            acc += "b"; self.advance()
+                            if self.current is None or not self.current.isalnum():
+                                return Token("KEYWORD", acc, self.line, start_col)
+                            return self.read_full_identifier(acc, start_col)
+                        return self.read_full_identifier(acc, start_col)
+                    return self.read_full_identifier(acc, start_col)
+                return self.read_full_identifier(acc, start_col)
+            elif self.current == "h":
+                acc += "h"; self.advance()
+                if self.current == "a":  # character
+                    acc += "a"; self.advance()
+                    if self.current == "r":
+                        acc += "r"; self.advance()
+                        if self.current == "a":
+                            acc += "a"; self.advance()
+                            if self.current == "c":
+                                acc += "c"; self.advance()
+                                if self.current == "t":
+                                    acc += "t"; self.advance()
+                                    if self.current == "e":
+                                        acc += "e"; self.advance()
+                                        if self.current == "r":
+                                            acc += "r"; self.advance()
+                                            if self.current is None or not self.current.isalnum():
+                                                return Token("KEYWORD", acc, self.line, start_col)
+                                            return self.read_full_identifier(acc, start_col)
+                                        return self.read_full_identifier(acc, start_col)
+                                    return self.read_full_identifier(acc, start_col)
+                                return self.read_full_identifier(acc, start_col)
+                            return self.read_full_identifier(acc, start_col)
+                        return self.read_full_identifier(acc, start_col)
+                    return self.read_full_identifier(acc, start_col)
+                elif self.current == "e":  # check / choice
+                    acc += "e"; self.advance()
+                    if self.current == "c":  # check
+                        acc += "c"; self.advance()
+                        if self.current == "k":
+                            acc += "k"; self.advance()
+                            if self.current is None or not self.current.isalnum():
+                                return Token("KEYWORD", acc, self.line, start_col)
+                            return self.read_full_identifier(acc, start_col)
+                        return self.read_full_identifier(acc, start_col)
+                    elif self.current == "o":  # choice
+                        acc += "o"; self.advance()
+                        if self.current == "i":
+                            acc += "i"; self.advance()
+                            if self.current == "c":
+                                acc += "c"; self.advance()
+                                if self.current == "e":
+                                    acc += "e"; self.advance()
+                                    if self.current is None or not self.current.isalnum():
+                                        return Token("KEYWORD", acc, self.line, start_col)
+                                    return self.read_full_identifier(acc, start_col)
+                                return self.read_full_identifier(acc, start_col)
+                            return self.read_full_identifier(acc, start_col)
+                        return self.read_full_identifier(acc, start_col)
+                    return self.read_full_identifier(acc, start_col)
+                return self.read_full_identifier(acc, start_col)
+            elif self.current == "l":  # close
+                acc += "l"; self.advance()
+                if self.current == "o":
+                    acc += "o"; self.advance()
+                    if self.current == "s":
+                        acc += "s"; self.advance()
+                        if self.current == "e":
+                            acc += "e"; self.advance()
+                            if self.current is None or not self.current.isalnum():
+                                return Token("KEYWORD", acc, self.line, start_col)
+                            return self.read_full_identifier(acc, start_col)
+                        return self.read_full_identifier(acc, start_col)
+                    return self.read_full_identifier(acc, start_col)
+                return self.read_full_identifier(acc, start_col)
+            return self.read_full_identifier(acc, start_col)
+
+        # -------------------------------------------------------------------
+        # s: sip, serve, start, stop
+        if self.current == "s":
+            acc = "s"; self.advance()
+            if self.current == "i":  # sip
+                acc += "i"; self.advance()
+                if self.current == "p":
+                    acc += "p"; self.advance()
+                    if self.current is None or not self.current.isalnum():
+                        return Token("KEYWORD", acc, self.line, start_col)
+                    return self.read_full_identifier(acc, start_col)
+                return self.read_full_identifier(acc, start_col)
+            elif self.current == "e":  # serve
+                acc += "e"; self.advance()
+                if self.current == "r":
+                    acc += "r"; self.advance()
+                    if self.current == "v":
+                        acc += "v"; self.advance()
+                        if self.current == "e":
+                            acc += "e"; self.advance()
+                            if self.current is None or not self.current.isalnum():
+                                return Token("KEYWORD", acc, self.line, start_col)
+                            return self.read_full_identifier(acc, start_col)
+                        return self.read_full_identifier(acc, start_col)
+                    return self.read_full_identifier(acc, start_col)
+                return self.read_full_identifier(acc, start_col)
+            elif self.current == "t":  # start / stop
+                acc += "t"; self.advance()
+                if self.current == "a":  # start
+                    acc += "a"; self.advance()
+                    if self.current == "r":
+                        acc += "r"; self.advance()
+                        if self.current == "t":
+                            acc += "t"; self.advance()
+                            if self.current is None or not self.current.isalnum():
+                                return Token("KEYWORD", acc, self.line, start_col)
+                            return self.read_full_identifier(acc, start_col)
+                        return self.read_full_identifier(acc, start_col)
+                    return self.read_full_identifier(acc, start_col)
+                elif self.current == "o":  # stop
+                    acc += "o"; self.advance()
+                    if self.current == "p":
+                        acc += "p"; self.advance()
+                        if self.current is None or not self.current.isalnum():
+                            return Token("KEYWORD", acc, self.line, start_col)
+                        return self.read_full_identifier(acc, start_col)
+                    return self.read_full_identifier(acc, start_col)
+                return self.read_full_identifier(acc, start_col)
+            return self.read_full_identifier(acc, start_col)
+
+        # -------------------------------------------------------------------
+        # f: feast, flag
+        if self.current == "f":
+            acc = "f"; self.advance()
+            if self.current == "e":  # feast
+                acc += "e"; self.advance()
+                if self.current == "a":
+                    acc += "a"; self.advance()
+                    if self.current == "s":
+                        acc += "s"; self.advance()
+                        if self.current == "t":
+                            acc += "t"; self.advance()
+                            if self.current is None or not self.current.isalnum():
+                                return Token("KEYWORD", acc, self.line, start_col)
+                            return self.read_full_identifier(acc, start_col)
+                        return self.read_full_identifier(acc, start_col)
+                    return self.read_full_identifier(acc, start_col)
+                return self.read_full_identifier(acc, start_col)
+            elif self.current == "l":  # flag
+                acc += "l"; self.advance()
+                if self.current == "a":
+                    acc += "a"; self.advance()
+                    if self.current == "g":
+                        acc += "g"; self.advance()
+                        if self.current is None or not self.current.isalnum():
+                            return Token("KEYWORD", acc, self.line, start_col)
+                        return self.read_full_identifier(acc, start_col)
+                    return self.read_full_identifier(acc, start_col)
+                return self.read_full_identifier(acc, start_col)
+            return self.read_full_identifier(acc, start_col)
+
+        # -------------------------------------------------------------------
+        # m: menu
+        if self.current == "m":
+            acc = "m"; self.advance()
+            if self.current == "e":
+                acc += "e"; self.advance()
+                if self.current == "n":
+                    acc += "n"; self.advance()
+                    if self.current == "u":
+                        acc += "u"; self.advance()
+                        if self.current is None or not self.current.isalnum():
+                            return Token("KEYWORD", acc, self.line, start_col)
+                        return self.read_full_identifier(acc, start_col)
+                    return self.read_full_identifier(acc, start_col)
+                return self.read_full_identifier(acc, start_col)
+            return self.read_full_identifier(acc, start_col)
+
+        # -------------------------------------------------------------------
+        # a: alt
+        if self.current == "a":
+            acc = "a"; self.advance()
+            if self.current == "l":
+                acc += "l"; self.advance()
+                if self.current == "t":
+                    acc += "t"; self.advance()
+                    if self.current is None or not self.current.isalnum():
+                        return Token("KEYWORD", acc, self.line, start_col)
+                    return self.read_full_identifier(acc, start_col)
+                return self.read_full_identifier(acc, start_col)
+            return self.read_full_identifier(acc, start_col)
+
+        # -------------------------------------------------------------------
+        # u: usual, up
+        if self.current == "u":
+            acc = "u"; self.advance()
+            if self.current == "s":  # usual
+                acc += "s"; self.advance()
+                if self.current == "u":
+                    acc += "u"; self.advance()
+                    if self.current == "a":
+                        acc += "a"; self.advance()
+                        if self.current == "l":
+                            acc += "l"; self.advance()
+                            if self.current is None or not self.current.isalnum():
+                                return Token("KEYWORD", acc, self.line, start_col)
+                            return self.read_full_identifier(acc, start_col)
+                        return self.read_full_identifier(acc, start_col)
+                    return self.read_full_identifier(acc, start_col)
+                return self.read_full_identifier(acc, start_col)
+            elif self.current == "p":  # up
+                acc += "p"; self.advance()
+                if self.current is None or not self.current.isalnum():
+                    return Token("KEYWORD", acc, self.line, start_col)
+                return self.read_full_identifier(acc, start_col)
+            return self.read_full_identifier(acc, start_col)
+
+        # -------------------------------------------------------------------
+        # d: down
+        if self.current == "d":
+            acc = "d"; self.advance()
+            if self.current == "o":
+                acc += "o"; self.advance()
+                if self.current == "w":
+                    acc += "w"; self.advance()
+                    if self.current == "n":
+                        acc += "n"; self.advance()
+                        if self.current is None or not self.current.isalnum():
+                            return Token("KEYWORD", acc, self.line, start_col)
+                        return self.read_full_identifier(acc, start_col)
+                    return self.read_full_identifier(acc, start_col)
+                return self.read_full_identifier(acc, start_col)
+            return self.read_full_identifier(acc, start_col)
+
+        # -------------------------------------------------------------------
+        # b: bill
+        if self.current == "b":
+            acc = "b"; self.advance()
+            if self.current == "i":
+                acc += "i"; self.advance()
+                if self.current == "l":
+                    acc += "l"; self.advance()
+                    if self.current == "l":
+                        acc += "l"; self.advance()
+                        if self.current is None or not self.current.isalnum():
+                            return Token("KEYWORD", acc, self.line, start_col)
+                        return self.read_full_identifier(acc, start_col)
+                    return self.read_full_identifier(acc, start_col)
+                return self.read_full_identifier(acc, start_col)
+            return self.read_full_identifier(acc, start_col)
+
+        # -------------------------------------------------------------------
+        # n: none, next
+        if self.current == "n":
+            acc = "n"; self.advance()
+            if self.current == "o":  # none
+                acc += "o"; self.advance()
+                if self.current == "n":
+                    acc += "n"; self.advance()
+                    if self.current == "e":
+                        acc += "e"; self.advance()
+                        if self.current is None or not self.current.isalnum():
+                            return Token("KEYWORD", acc, self.line, start_col)
+                        return self.read_full_identifier(acc, start_col)
+                    return self.read_full_identifier(acc, start_col)
+                return self.read_full_identifier(acc, start_col)
+            elif self.current == "e":  # next
+                acc += "e"; self.advance()
+                if self.current == "x":
+                    acc += "x"; self.advance()
+                    if self.current == "t":
+                        acc += "t"; self.advance()
+                        if self.current is None or not self.current.isalnum():
+                            return Token("KEYWORD", acc, self.line, start_col)
+                        return self.read_full_identifier(acc, start_col)
+                    return self.read_full_identifier(acc, start_col)
+                return self.read_full_identifier(acc, start_col)
+            return self.read_full_identifier(acc, start_col)
+
+        # -------------------------------------------------------------------
+        # o: open, of, order, instead
+        if self.current == "o":
+            acc = "o"; self.advance()
+            if self.current == "p":  # open
+                acc += "p"; self.advance()
+                if self.current == "e":
+                    acc += "e"; self.advance()
+                    if self.current == "n":
+                        acc += "n"; self.advance()
+                        if self.current is None or not self.current.isalnum():
+                            return Token("KEYWORD", acc, self.line, start_col)
+                        return self.read_full_identifier(acc, start_col)
+                    return self.read_full_identifier(acc, start_col)
+                return self.read_full_identifier(acc, start_col)
+            elif self.current == "f":  # of
+                acc += "f"; self.advance()
+                if self.current is None or not self.current.isalnum():
+                    return Token("KEYWORD", acc, self.line, start_col)
+                return self.read_full_identifier(acc, start_col)
+            elif self.current == "r":  # order
+                acc += "r"; self.advance()
+                if self.current == "d":
+                    acc += "d"; self.advance()
+                    if self.current == "e":
+                        acc += "e"; self.advance()
+                        if self.current == "r":
+                            acc += "r"; self.advance()
+                            if self.current is None or not self.current.isalnum():
+                                return Token("KEYWORD", acc, self.line, start_col)
+                            return self.read_full_identifier(acc, start_col)
+                        return self.read_full_identifier(acc, start_col)
+                    return self.read_full_identifier(acc, start_col)
+                return self.read_full_identifier(acc, start_col)
+            elif self.current == "n":  # instead
+                acc += "n"; self.advance()
+                if self.current == "s":
+                    acc += "s"; self.advance()
+                    if self.current == "t":
+                        acc += "t"; self.advance()
+                        if self.current == "e":
+                            acc += "e"; self.advance()
+                            if self.current == "a":
+                                acc += "a"; self.advance()
+                                if self.current == "d":
+                                    acc += "d"; self.advance()
+                                    if self.current is None or not self.current.isalnum():
+                                        return Token("KEYWORD", acc, self.line, start_col)
+                                    return self.read_full_identifier(acc, start_col)
+                                return self.read_full_identifier(acc, start_col)
+                            return self.read_full_identifier(acc, start_col)
+                        return self.read_full_identifier(acc, start_col)
+                    return self.read_full_identifier(acc, start_col)
+                return self.read_full_identifier(acc, start_col)
+            return self.read_full_identifier(acc, start_col)
+
+        # -------------------------------------------------------------------
+        # t: take
+        if self.current == "t":
+            acc = "t"; self.advance()
+            if self.current == "a":
+                acc += "a"; self.advance()
+                if self.current == "k":
+                    acc += "k"; self.advance()
+                    if self.current == "e":
+                        acc += "e"; self.advance()
+                        if self.current is None or not self.current.isalnum():
+                            return Token("KEYWORD", acc, self.line, start_col)
+                        return self.read_full_identifier(acc, start_col)
+                    return self.read_full_identifier(acc, start_col)
+                return self.read_full_identifier(acc, start_col)
+            return self.read_full_identifier(acc, start_col)
+
+        # -------------------------------------------------------------------
+        # numbers
         if self.current.isdigit():
-            return self.read_number()
+            acc = ""
+            while self.current is not None and self.current.isdigit():
+                acc += self.current
+                self.advance()
+            return Token("NUMBER", acc, self.line, start_col)
 
-        # string literal (double quotes)
-        if self.current == "\"":
-            return self.read_string()
+        # -------------------------------------------------------------------
+        # identifiers
+        if self.current.isalpha():
+            return self.read_full_identifier("", start_col)
 
-        # char literal (single quotes)
-        if self.current == "'":
-            return self.read_char()
+        # -------------------------------------------------------------------
+        # symbols (explicit ladder)
+        if self.current == "{":
+            self.advance(); return Token("SYMBOL", "{", self.line, start_col)
+        if self.current == "}":
+            self.advance(); return Token("SYMBOL", "}", self.line, start_col)
+        if self.current == "(":
+            self.advance(); return Token("SYMBOL", "(", self.line, start_col)
+        if self.current == ")":
+            self.advance(); return Token("SYMBOL", ")", self.line, start_col)
+        if self.current == "[":
+            self.advance(); return Token("SYMBOL", "[", self.line, start_col)
+        if self.current == "]":
+            self.advance(); return Token("SYMBOL", "]", self.line, start_col)
+        if self.current == ",":
+            self.advance(); return Token("SYMBOL", ",", self.line, start_col)
+        if self.current == ":":
+            self.advance(); return Token("SYMBOL", ":", self.line, start_col)
+        if self.current == ".":
+            self.advance(); return Token("SYMBOL", ".", self.line, start_col)
 
-        # two-char operators
-        two = (self.current + (self.peek(1) or ""))
-        if two in TWO_CHAR_OPS:
-            t = Token("OP", two, self.line, self.col)
-            self.advance(); self.advance()
-            return t
-
-        # single char operators
-        if self.current in SINGLE_CHAR_OPS:
-            t = Token("OP", self.current, self.line, self.col)
-            self.advance()
-            return t
-
-        # symbols
-        if self.current in SYMBOLS:
-            t = Token("SYMBOL", self.current, self.line, self.col)
-            self.advance()
-            return t
-
-        # colon and semicolon and comma (':' used in menu choices)
-        if self.current in {":", ","}:
-            t = Token("SYMBOL", self.current, self.line, self.col)
-            self.advance()
-            return t
-
-        # anything else is unexpected
-        self.make_error(f"Unexpected character {repr(self.current)}")
-        return None
+        # -------------------------------------------------------------------
+        # unknown
+        acc = self.current
+        self.advance()
+        return Token("UNKNOWN", acc, self.line, start_col)
 
     def tokenize(self):
         tokens = []
         while True:
             tok = self.get_next_token()
             tokens.append(tok)
-            if tok.type == "EOF":
+            if tok == None:
                 break
         return tokens

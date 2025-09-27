@@ -1,9 +1,9 @@
 open
-piece of x = 5.2..
 piece of y = 3..
 piece of z = 10..
 pieces[] of r = [1,  2]..
-crumb of a = 1.2..
+
+characters[] of name = "?%%adkala"..
 
 table of something = [
     piece of shit..
@@ -26,11 +26,10 @@ something of ro = [
 ]..
 
 # comment line
-prepare piece of addOne (piece of v) {
+prepare piece of addOn(piece of v) {
     pieces[] of r = [y,  2]..
     bill("hello world")..
     piece of i = r[1]..
-
 
     # ++r[1] += 2101..
     ro[shit] = 1..
