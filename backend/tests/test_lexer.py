@@ -1,6 +1,7 @@
-from app.core.lexer import Lexer
 
 from pprint import pprint
+
+from backend.app.core.lexer import Lexer
 
 with open("./sample_programs/general.platter", "r", encoding="utf-8") as f:
     source = f.read()
