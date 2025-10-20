@@ -448,7 +448,7 @@ class Lexer:
                 if self.current == ".":
                     has_dot = True
                 self.advance()
-            return Token("NUMERIC_LITERAL", self.text[start_pos:self.pos], self.line, start_col)
+            return Token("SIP_LITERAL" if has_dot else "PIECE_LITERAL", self.text[start_pos:self.pos], self.line, start_col)
 
         # -------------------------------------------------------------------
         # comment
