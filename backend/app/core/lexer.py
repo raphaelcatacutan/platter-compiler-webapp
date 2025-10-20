@@ -120,7 +120,7 @@ class Lexer:
                     if self.current == "n":
                         self.advance()
                         if self.current is None or self.current in " \n\t()[]{};=+-*/%!<>,:\"":
-                            return Token("FLAGLIT", self.text[start_pos:self.pos], self.line, start_col)
+                            return Token("FLAG_LITERAL", self.text[start_pos:self.pos], self.line, start_col)
         if self.current == "f":
             self.advance()
             if self.current == "a":
@@ -412,7 +412,7 @@ class Lexer:
             if self.current == "p":
                 self.advance()
                 if self.current is None or self.current in " \n\t()[]{};=+-*/%!<>,:\"":
-                    return Token("FLAGLIT", self.text[start_pos:self.pos], self.line, start_col)
+                    return Token("FLAG_LITERAL", self.text[start_pos:self.pos], self.line, start_col)
         if self.current in "{}()[];=+-*/%!<>,:\"\t\n ":
             ch = self.current
             self.advance()
@@ -437,7 +437,7 @@ class Lexer:
                 self.advance()
             if self.current == '"':
                 self.advance()
-                return Token("CHARSLIT", self.text[start_pos + 1:self.pos - 1], self.line, start_col)
+                return Token("CHARS_LITERAL", self.text[start_pos + 1:self.pos - 1], self.line, start_col)
 
         # -------------------------------------------------------------------
         # number
@@ -448,7 +448,7 @@ class Lexer:
                 if self.current == ".":
                     has_dot = True
                 self.advance()
-            return Token("PIECELIT" if not has_dot else "SIPLIT", self.text[start_pos:self.pos], self.line, start_col)
+            return Token("NUMERIC_LITERAL", self.text[start_pos:self.pos], self.line, start_col)
 
         # -------------------------------------------------------------------
         # comment
@@ -456,20 +456,20 @@ class Lexer:
             self.advance()
             if self.current == "#":  # multi-line
                 self.advance()
-                self.advance()
                 start_pos = self.pos
                 while self.current is not None:
                     if self.current == "#" and self.pos + 1 < len(self.text) and self.text[self.pos + 1] == "#":
                         self.advance()
                         self.advance()
-                        return Token("COMMENT", self.text[start_pos:self.pos - 2], self.line, start_col)
+                        return Token("COMMENT_MULTI", self.text[start_pos:self.pos - 2], self.line, start_col)
                     self.advance()
-                return Token("UNTERMINATED_COMMENT", self.text[start_pos:self.pos], self.line, start_col)
-            else:  # single-line
+                return Token("UNKNOWN", self.text[start_pos:self.pos], self.line, start_col)
+            elif self.current == " ":  # multi-line
+                self.advance()
                 start_pos = self.pos
                 while self.current is not None and self.current != "\n":
                     self.advance()
-                return Token("COMMENT", self.text[start_pos:self.pos], self.line, start_col)
+                return Token("COMMENT_SINGLE", self.text[start_pos:self.pos], self.line, start_col)
         ch = self.current
         self.advance()
         return Token("UNKNOWN", ch, self.line, start_col)
