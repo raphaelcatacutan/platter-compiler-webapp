@@ -1,3 +1,6 @@
+# Assignment operators for parser
+ASSIGN_OPS = ["=", "+=", "-=", "*=", "/=", "%="]
+
 class Token:
     def __init__(self, type_, value, line, col):
         self.type = type_
