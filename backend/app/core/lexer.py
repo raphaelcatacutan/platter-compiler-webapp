@@ -257,6 +257,14 @@ class Lexer:
                         return Token("POW", self.text[start_pos:self.pos], self.line, start_col)
         if self.current == "r":
             self.advance()
+            if self.current == "a":
+                self.advance()
+                if self.current == "a":
+                    self.advance()
+                    if self.current == "d":
+                        self.advance()
+                        if self.current is None or self.current in " \n\t()[]{};=+-*/%!<>,:\"":
+                            return Token("RAND", self.text[start_pos:self.pos], self.line, start_col)
             if self.current == "e":
                 self.advance()
                 if self.current == "m":
@@ -407,28 +415,34 @@ class Lexer:
                                     self.advance()
                                     if self.current is None or self.current in " \n\t()[]{};=+-*/%!<>,:\"":
                                         return Token("TOPIECE", self.text[start_pos:self.pos], self.line, start_col)
+                elif self.current == "s":
+                    self.advance()
+                    if self.current == "i":
+                        self.advance()
+                        if self.current == "p":
+                            self.advance()
+                            if self.current is None or self.current in " \n\t()[]{};=+-*/%!<>,:\"":
+                                return Token("TOSIP", self.text[start_pos:self.pos], self.line, start_col)
         if self.current == "u":
             self.advance()
             if self.current == "p":
                 self.advance()
                 if self.current is None or self.current in " \n\t()[]{};=+-*/%!<>,:\"":
                     return Token("FLAG_LITERAL", self.text[start_pos:self.pos], self.line, start_col)
-        if self.current in "{}()[];=+-*/%!<>,:\"\t\n ":
-            ch = self.current
-            self.advance()
-            if ch in "+-*/%<>=!":
-                if self.current == "=":
-                    two = ch + "="
-                    self.advance()
-                    return Token(two, two, self.line, start_col)
-            return Token(ch, ch, self.line, start_col)
-        if self.current.isalpha() or self.current == "_":
-            while self.current is not None and (self.current.isalnum() or self.current == "_"):
+            elif self.current == "s":
                 self.advance()
-            return Token("IDENTIFIER", self.text[start_pos:self.pos], self.line, start_col)
-        # -------------------------------------------------------------------
-        # string
+                if self.current == "u":
+                    self.advance()
+                    if self.current == "a":
+                        self.advance()
+                        if self.current == "l":
+                            self.advance()
+                            if self.current is None or self.current in " \n\t()[]{};=+-*/%!<>,:\"":
+                                return Token("USUAL", self.text[start_pos:self.pos], self.line, start_col)
+        # ---------------------------------------------------------------
+        # STRING FIRST before punctuation
         if self.current == '"':
+            start_col = self.col
             start_pos = self.pos
             self.advance()
             while self.current is not None and self.current != '"':
@@ -437,22 +451,39 @@ class Lexer:
                 self.advance()
             if self.current == '"':
                 self.advance()
-                return Token("CHARS_LITERAL", self.text[start_pos + 1:self.pos - 1], self.line, start_col)
+                # capture including quotes
+                value = self.text[start_pos:self.pos]
+                return Token("CHARS_LITERAL", value, self.line, start_col)
+            ch = self.text[start_pos]
+            self.advance()
+            return Token("UNKNOWN", ch, self.line, start_col)
 
-        # -------------------------------------------------------------------
-        # number
+        # ---------------------------------------------------------------
+        # NUMBERS
         if self.current.isdigit():
+            start_col = self.col
             start_pos = self.pos
             has_dot = False
             while self.current is not None and (self.current.isdigit() or (self.current == "." and not has_dot)):
                 if self.current == ".":
                     has_dot = True
                 self.advance()
-            return Token("SIP_LITERAL" if has_dot else "PIECE_LITERAL", self.text[start_pos:self.pos], self.line, start_col)
+            return Token("SIP_LITERAL" if has_dot else "PIECE_LITERAL", self.text[start_pos:self.pos], self.line,
+                         start_col)
 
-        # -------------------------------------------------------------------
-        # comment
+        # ---------------------------------------------------------------
+        # IDENTIFIERS
+        if self.current.isalpha() or self.current == "_":
+            start_col = self.col
+            start_pos = self.pos
+            while self.current is not None and (self.current.isalnum() or self.current == "_"):
+                self.advance()
+            return Token("IDENTIFIER", self.text[start_pos:self.pos], self.line, start_col)
+
+        # ---------------------------------------------------------------
+        # COMMENTS
         if self.current == "#":
+            start_col = self.col
             self.advance()
             if self.current == "#":  # multi-line
                 self.advance()
@@ -463,14 +494,36 @@ class Lexer:
                         self.advance()
                         return Token("COMMENT_MULTI", self.text[start_pos:self.pos - 2], self.line, start_col)
                     self.advance()
-                return Token("UNKNOWN", self.text[start_pos:self.pos], self.line, start_col)
-            elif self.current == " ":  # multi-line
+                ch = "#"  # unclosed ##
+                self.advance()
+                return Token("UNKNOWN", ch, self.line, start_col)
+            elif self.current == " ":
                 self.advance()
                 start_pos = self.pos
                 while self.current is not None and self.current != "\n":
                     self.advance()
                 return Token("COMMENT_SINGLE", self.text[start_pos:self.pos], self.line, start_col)
+            ch = "#"
+            self.advance()
+            return Token("UNKNOWN", ch, self.line, start_col)
+
+        # ---------------------------------------------------------------
+        # PUNCTUATION, OPERATORS, DELIMITERS
+        if self.current in "{}()[];=+-*/%!<>,:\t\n ":
+            start_col = self.col
+            ch = self.current
+            self.advance()
+            if ch in "+-*/%<>=!":
+                if self.current == "=":
+                    two = ch + "="
+                    self.advance()
+                    return Token(two, two, self.line, start_col)
+            return Token(ch, ch, self.line, start_col)
+
+        # ---------------------------------------------------------------
+        # FALLBACK
         ch = self.current
+        start_col = self.col
         self.advance()
         return Token("UNKNOWN", ch, self.line, start_col)
     def tokenize(self):
