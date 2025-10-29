@@ -225,20 +225,20 @@ class Lexer:
                         self.advance()
                         if self.current is None or self.current in " \n\t()[]{};=+-*/%!<>,:\"":
                             return Token("PASS", self.text[start_pos:self.pos], self.line, start_col)
-                elif self.current == "r":
+            elif self.current == "r":
+                self.advance()
+                if self.current == "e":
                     self.advance()
-                    if self.current == "e":
+                    if self.current == "p":
                         self.advance()
-                        if self.current == "p":
+                        if self.current == "a":
                             self.advance()
-                            if self.current == "a":
+                            if self.current == "r":
                                 self.advance()
-                                if self.current == "r":
+                                if self.current == "e":
                                     self.advance()
-                                    if self.current == "e":
-                                        self.advance()
-                                        if self.current is None or self.current in " \n\t()[]{};=+-*/%!<>,:\"":
-                                            return Token("PREPARE", self.text[start_pos:self.pos], self.line, start_col)
+                                    if self.current is None or self.current in " \n\t()[]{};=+-*/%!<>,:\"":
+                                        return Token("PREPARE", self.text[start_pos:self.pos], self.line, start_col)
             elif self.current == "i":
                 self.advance()
                 if self.current == "e":
