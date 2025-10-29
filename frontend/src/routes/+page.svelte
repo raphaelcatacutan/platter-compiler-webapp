@@ -479,11 +479,11 @@ serve piece of start() {
 	}
 
 	.table {
-		flex: 1;
+		height: 856px; /* retain table height like a textarea */
 		display: flex;
 		flex-direction: column;
 		/* use the `editor` SVG asset for background */
-		background-image: var(--table-img);
+		/* background-image: var(--table-img); */
 		/* show SVG at its intrinsic size */
 		background-position: left;
 		background-repeat: no-repeat;
@@ -495,7 +495,7 @@ serve piece of start() {
 		text-align: center;
 		font-weight: 700;
 		margin-bottom: 8px;
-		margin-top: 48px;
+		/* margin-top: 48px; */
 
 		border: none;
 		box-shadow: none;
@@ -507,7 +507,7 @@ serve piece of start() {
 		gap: 6px;
 		border: none;
 		box-shadow: none;
-		margin-left: 32px;
+		/* margin-left: 32px; */
 	}
 	.table-head {
 		border: 4px solid var(--outline);
@@ -515,21 +515,23 @@ serve piece of start() {
 		padding: 8px;
 		font-weight: 600;
 		margin-bottom: 8px;
-		border: none;
-		box-shadow: none;
+		/* border: none;
+		box-shadow: none; */
 	}
 	.table-body {
 		border: 4px solid var(--outline);
 		border-radius: 10px;
 		padding: 6px;
-		flex: 1;
-		overflow: auto;
+		flex: 1; /* occupy remaining space below the head */
+		min-height: 0; /* allow flex child to shrink and enable scrolling */
+		overflow-y: auto;
+		overflow-x: hidden;
 		display: flex;
 		flex-direction: column;
 		gap: 6px;
-
+		/* 
 		border: none;
-		box-shadow: none;
+		box-shadow: none; */
 	}
 	.table-row {
 		border-bottom: 1px dashed rgba(255, 255, 255, 0.4);
