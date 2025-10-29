@@ -253,6 +253,12 @@ serve piece of start() {
 		padding: 8px 12px;
 		user-select: none;
 	}
+
+	.title {
+		font-size: 14px;
+		margin-left: 24px;
+		margin-bottom: 8px;
+	}
 	.brand {
 		display: flex;
 		align-items: center;
@@ -409,9 +415,10 @@ serve piece of start() {
 		box-shadow: none;
 	}
 	.counter {
-		border: 2px solid var(--outline);
-		padding: 4px 10px;
 		border-radius: 10px;
+		margin-right: 10px;
+		scale: 0.7;
+		margin-bottom: 6px;
 	}
 
 	.terminal-body {
