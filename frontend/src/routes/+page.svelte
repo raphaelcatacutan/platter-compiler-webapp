@@ -185,7 +185,7 @@ serve piece of start() {
 				>
 			</div>
 
-			<div class="panel table">
+			<div class="panel table" style={`--table-img: url(${table})`}>
 				<div class="table-title">Lexer Table</div>
 				<div class="table-head">
 					<div>Lexeme</div>
@@ -305,14 +305,14 @@ serve piece of start() {
 		border-radius: 8px;
 		cursor: pointer;
 		margin-right: 8px;
-		margin-top: 24px;
+		margin-top: 12px;
 	}
 
 	.pill {
 		display: inline-flex;
 		align-items: center;
 		gap: 10px;
-		border: 3.5px solid var(--outline);
+		border: 4px solid var(--outline);
 		background: transparent;
 		color: var(--ink);
 		padding: 8px 28px;
@@ -331,7 +331,7 @@ serve piece of start() {
 		display: inline-flex;
 		align-items: center;
 		gap: 10px;
-		border: 3.5px solid var(--outline);
+		border: 4px solid var(--outline);
 		background: transparent;
 		color: var(--ink);
 		padding: 8px 12px;
@@ -356,7 +356,7 @@ serve piece of start() {
 		/* background: var(--panel); */
 		border-radius: 14px;
 		padding: 10px;
-		border: 2px solid var(--outline);
+		border: 4px solid var(--outline);
 
 		box-shadow: var(--shadow);
 	}
@@ -393,6 +393,7 @@ serve piece of start() {
 	}
 
 	.editor-area {
+		width: 90%;
 		height: 450px;
 		background: transparent;
 		color: var(--ink);
@@ -424,7 +425,7 @@ serve piece of start() {
 	.terminal-body {
 		height: 140px;
 		overflow: auto;
-		border: 2px solid var(--outline);
+		border: 4px solid var(--outline);
 		border-radius: 10px;
 		padding: 8px;
 
@@ -460,15 +461,15 @@ serve piece of start() {
 		justify-content: space-between;
 
 		margin-right: 8px;
-		margin-top: 16px;
-		margin-bottom: 14px;
+		margin-top: 6px;
+		margin-bottom: 0px;
 	}
 	.btn {
 		flex: 24;
 		display: inline-flex;
 		align-items: center;
 		gap: 8px;
-		border: 3.5px solid var(--outline);
+		border: 4px solid var(--outline);
 		background: transparent;
 		color: var(--ink);
 		padding: 8px 12px;
@@ -481,27 +482,44 @@ serve piece of start() {
 		flex: 1;
 		display: flex;
 		flex-direction: column;
+		/* use the `editor` SVG asset for background */
+		background-image: var(--table-img);
+		/* show SVG at its intrinsic size */
+		background-position: left;
+		background-repeat: no-repeat;
+		/* keep normal panel border; do not scale image into a border */
+		border: none;
+		box-shadow: none;
 	}
 	.table-title {
 		text-align: center;
 		font-weight: 700;
 		margin-bottom: 8px;
+		margin-top: 48px;
+
+		border: none;
+		box-shadow: none;
 	}
 	.table-head,
 	.table-row {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		gap: 6px;
+		border: none;
+		box-shadow: none;
+		margin-left: 32px;
 	}
 	.table-head {
-		border: 2px solid var(--outline);
+		border: 4px solid var(--outline);
 		border-radius: 10px;
 		padding: 8px;
 		font-weight: 600;
 		margin-bottom: 8px;
+		border: none;
+		box-shadow: none;
 	}
 	.table-body {
-		border: 2px solid var(--outline);
+		border: 4px solid var(--outline);
 		border-radius: 10px;
 		padding: 6px;
 		flex: 1;
@@ -509,6 +527,9 @@ serve piece of start() {
 		display: flex;
 		flex-direction: column;
 		gap: 6px;
+
+		border: none;
+		box-shadow: none;
 	}
 	.table-row {
 		border-bottom: 1px dashed rgba(255, 255, 255, 0.4);
