@@ -467,7 +467,7 @@ serve piece of start() {
 		border: 4px solid var(--outline);
 		border-radius: 10px;
 		padding: 8px;
-
+		margin-left: 16px;
 		border: none;
 		box-shadow: none;
 	}
