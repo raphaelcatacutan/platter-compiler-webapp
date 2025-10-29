@@ -3,19 +3,29 @@
 	import {
 		check,
 		copy,
+		copy1,
 		darkmode,
+		darkmode1,
 		darkBg,
+		lightBg,
 		editor,
+		editor1,
 		errorIcon,
 		errors,
+		errors1,
 		favicon,
 		lightmode,
-		refresh,
 		logo,
 		newFile,
+		newFile1,
 		openFile,
+		openFile1,
+		refresh,
+		refresh1,
 		saveFile,
+		saveFile1,
 		synSemLexIcon,
+		synSemLexIcon1,
 		table,
 		warning
 	} from '$lib';
@@ -84,7 +94,7 @@ serve piece of start() {
 	}
 </script>
 
-<div class="ide" data-theme={theme} style={`--bg-img: url(${darkBg})`}>
+<div class="ide" data-theme={theme} style={`--bg-img: url(${theme === 'dark' ? darkBg : lightBg})`}>
 	<!-- Top bar -->
 	<header class="titlebar">
 		<div class="brand">
@@ -105,16 +115,29 @@ serve piece of start() {
 			<!-- Toolbar row -->
 			<div class="toolbar">
 				<button class="pill {activeTab === 'lexical' ? 'active' : ''}" on:click={analyzeLexical}>
-					<img class="icon" src={synSemLexIcon} alt="Lexical Icon" />
+					{#if theme === 'dark'}
+						<img class="icon" src={synSemLexIcon} alt="Lexical Icon" />
+					{:else}
+						<img class="icon" src={synSemLexIcon1} alt="Light Theme Icon" />
+					{/if}
+
 					<span>Lexical</span>
 				</button>
 				<!-- syntax and semantic methods to be replacesrd -->
 				<button class="pill {activeTab === 'syntax' ? 'active' : ''}" on:click={analyzeLexical}>
-					<img class="icon" src={synSemLexIcon} alt="Syntax Icon" />
+					{#if theme === 'dark'}
+						<img class="icon" src={synSemLexIcon} alt="Lexical Icon" />
+					{:else}
+						<img class="icon" src={synSemLexIcon1} alt="Light Theme Icon" />
+					{/if}
 					<span>Syntax</span>
 				</button>
 				<button class="pill {activeTab === 'semantic' ? 'active' : ''}" on:click={analyzeLexical}>
-					<img class="icon" src={synSemLexIcon} alt="Semantic Icon" />
+					{#if theme === 'dark'}
+						<img class="icon" src={synSemLexIcon} alt="Semantic Icon" />
+					{:else}
+						<img class="icon" src={synSemLexIcon1} alt="Light Theme Icon" />
+					{/if}
 					<span>Semantic</span>
 				</button>
 
@@ -124,27 +147,27 @@ serve piece of start() {
 					>{#if theme === 'dark'}
 						<img class="icon" src={refresh} alt="Dark Theme Icon" />
 					{:else}
-						<img class="icon" src={refresh} alt="Light Theme Icon" />
+						<img class="icon" src={refresh1} alt="Light Theme Icon" />
 					{/if}</button
 				>
 				<button class="icon-btn" title="copy"
 					>{#if theme === 'dark'}
 						<img class="icon" src={copy} alt="Dark Theme Icon" />
 					{:else}
-						<img class="icon" src={copy} alt="Light Theme Icon" />
+						<img class="icon" src={copy1} alt="Light Theme Icon" />
 					{/if}</button
 				>
 				<button class="icon-btn" title="Theme" on:click={toggleTheme}>
 					{#if theme === 'dark'}
-						<img class="icon" src={darkmode} alt="Dark Theme Icon" />
+						<img class="icon" src={lightmode} alt="Dark Theme Icon" />
 					{:else}
-						<img class="icon" src={lightmode} alt="Light Theme Icon" />
+						<img class="icon" src={darkmode} alt="Light Theme Icon" />
 					{/if}
 				</button>
 			</div>
 
 			<!-- Editor canvas -->
-			<div class="panel editor" style={`--editor-img: url(${editor})`}>
+			<div class="panel editor" style={`--editor-img: url(${theme === 'dark' ? editor : editor1})`}>
 				<textarea
 					class="editor-area"
 					bind:value={codeInput}
@@ -154,7 +177,10 @@ serve piece of start() {
 			</div>
 
 			<!-- Terminal panel -->
-			<div class="panel terminal" style={`--terminal-img: url(${errors})`}>
+			<div
+				class="panel terminal"
+				style={`--terminal-img: url(${theme === 'dark' ? errors : errors1})`}
+			>
 				<div class="terminal-head">
 					<span class="title">Terminal</span>
 					<!-- error count -->
@@ -174,14 +200,27 @@ serve piece of start() {
 		<!-- RIGHT SIDEBAR -->
 		<aside class="right">
 			<div class="actions">
-				<button class="btn"
-					><img class="icon" src={newFile} alt="New File" /> <span>New File</span></button
+				<button class="btn">
+					{#if theme === 'dark'}
+						<img class="icon" src={newFile} alt="Dark Theme Icon" />
+					{:else}
+						<img class="icon" src={newFile1} alt="Light Theme Icon" />
+					{/if} <span>New File</span></button
+				>
+				<button class="btn">
+					{#if theme === 'dark'}
+						<img class="icon" src={openFile} alt="Dark Theme Icon" />
+					{:else}
+						<img class="icon" src={openFile1} alt="Light Theme Icon" />
+					{/if}
+					<span>Open File</span></button
 				>
 				<button class="btn"
-					><img class="icon" src={openFile} alt="Open File" /> <span>Open File</span></button
-				>
-				<button class="btn"
-					><img class="icon" src={saveFile} alt="Save File" /> <span>Save File</span></button
+					>{#if theme === 'dark'}
+						<img class="icon" src={saveFile} alt="Dark Theme Icon" />
+					{:else}
+						<img class="icon" src={saveFile1} alt="Light Theme Icon" />
+					{/if} <span>Save File</span></button
 				>
 			</div>
 
@@ -241,7 +280,7 @@ serve piece of start() {
 		--ink-muted: #555;
 		--accent: #111;
 		--outline: #111;
-		background: linear-gradient(180deg, #fafafa, #f0f0f4);
+		background-image: var(--bg-img);
 	}
 
 	.titlebar {
