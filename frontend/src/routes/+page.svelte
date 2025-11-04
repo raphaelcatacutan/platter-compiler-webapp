@@ -72,12 +72,34 @@ serve piece of start() {
 			});
 			if (!res.ok) throw new Error(`HTTP ${res.status}`);
 			const data = (await res.json()) as { success: boolean; tokens: Token[] };
-			tokens = data.tokens ?? [];
+			// receive tokens and separate unknown/error tokens into the terminal
+			const received = data.tokens ?? [];
+			// treat tokens with type 'unknown' (case-insensitive) as lexical errors
+			const unknownTokens = received.filter(
+				(t) => typeof t.type === 'string' && t.type.toLowerCase() === 'unknown'
+			);
+			// tokens to show in the lexer table (exclude unknowns)
+			tokens = received.filter(
+				(t) => !(typeof t.type === 'string' && t.type.toLowerCase() === 'unknown')
+			);
+
 			// update right table
 			lexerRows.length = 0;
 			for (const t of tokens) {
 				lexerRows.push({ lexeme: t.value ?? '', token: t.type });
 			}
+
+			if (unknownTokens.length) {
+				// move unknown tokens into the terminal as individual error messages
+				termMessages = unknownTokens.map((u) => ({
+					icon: errors,
+					text: `Lexical error: line ${u.line} col ${u.col} - invalid character ${u.value}`
+				}));
+				// also set a concise terminal summary
+				// keep lexer table OK message minimal
+				return;
+			}
+
 			setTerminalOk(
 				tokens.length ? `Lexical OK • ${tokens.length} token(s)` : 'No tokens produced'
 			);
