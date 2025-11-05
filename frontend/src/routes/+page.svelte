@@ -52,6 +52,36 @@ serve piece of start() {
 	let textareaEl: HTMLTextAreaElement | null = null;
 	let cmInstance: any = null;
 
+	// file input for opening .platter files
+	let fileInputEl: HTMLInputElement;
+
+	function openFileDialog() {
+		fileInputEl?.click();
+	}
+
+	async function handleFileInput() {
+		const f = fileInputEl?.files?.[0];
+		if (!f) return;
+		if (!f.name || !f.name.toLowerCase().endsWith('.platter')) {
+			setTerminalError('Please select a .platter file');
+			fileInputEl.value = '';
+			return;
+		}
+		try {
+			const text = await f.text();
+			codeInput = text;
+			if (cmInstance && typeof cmInstance.setValue === 'function') {
+				cmInstance.setValue(text);
+			}
+			setTerminalOk(`Opened ${f.name}`);
+		} catch (err) {
+			setTerminalError('Failed to read file');
+		} finally {
+			// reset input so the same file can be selected again
+			fileInputEl.value = '';
+		}
+	}
+
 	function loadScript(url: string) {
 		return new Promise((resolve, reject) => {
 			const s = document.createElement('script');
@@ -108,7 +138,13 @@ serve piece of start() {
 
 	// Terminal messages
 	type TermMsg = { icon: string; text: string };
-	let termMessages: TermMsg[] = [{ icon: '✅', text: 'No Error' }];
+	// default to empty terminal (no messages) so termMessages.length === 0
+	let termMessages: TermMsg[] = [];
+
+	// Compute error count: treat messages that start with "Lexical OK" as non-errors (count as zero)
+	$: errorCount = termMessages.filter(
+		(m) => !(typeof m.text === 'string' && m.text.startsWith('Lexical OK'))
+	).length;
 
 	function setTerminalOk(message = 'No Error') {
 		termMessages = [{ icon: check, text: message }];
@@ -266,8 +302,14 @@ serve piece of start() {
 			>
 				<div class="terminal-head">
 					<span class="title">Terminal</span>
-					<!-- error count -->
-					<span class="counter">Error: {termMessages.length}</span>
+					<!-- error count (ignore 'Lexical OK' messages) -->
+
+					<div class="counter">
+						<span>Errors: {errorCount} </span>
+						{#if errorCount > 0}
+							<img class="icon" src={warning} alt="warning" />
+						{/if}
+					</div>
 				</div>
 				<div class="terminal-body">
 					{#each termMessages as e}
@@ -290,7 +332,7 @@ serve piece of start() {
 						<img class="icon" src={newFile1} alt="Light Theme Icon" />
 					{/if} <span>New File</span></button
 				>
-				<button class="btn">
+				<button class="btn" type="button" on:click={openFileDialog}>
 					{#if theme === 'dark'}
 						<img class="icon" src={openFile} alt="Dark Theme Icon" />
 					{:else}
@@ -298,6 +340,14 @@ serve piece of start() {
 					{/if}
 					<span>Open File</span></button
 				>
+				<!-- hidden file input for opening .platter files -->
+				<input
+					type="file"
+					accept=".platter"
+					bind:this={fileInputEl}
+					on:change={handleFileInput}
+					style="display:none"
+				/>
 				<button class="btn"
 					>{#if theme === 'dark'}
 						<img class="icon" src={saveFile} alt="Dark Theme Icon" />
@@ -493,7 +543,7 @@ serve piece of start() {
 		box-shadow: none;
 	}
 	.editor + .terminal {
-		margin-top: 14px;
+		margin-top: 10px;
 
 		border: none;
 	}
@@ -531,7 +581,6 @@ serve piece of start() {
 
 	.terminal-head {
 		display: flex;
-		justify-content: space-between;
 		align-items: center;
 		margin-bottom: 8px;
 		color: var(--ink);
@@ -539,14 +588,18 @@ serve piece of start() {
 		box-shadow: none;
 	}
 	.counter {
+		display: flex;
+		align-items: center;
+		gap: 8px;
 		border-radius: 10px;
-		margin-right: 10px;
-		scale: 0.7;
+		margin: 0;
+		transform: scale(0.7);
+		margin-left: 400px;
 		margin-bottom: 6px;
 	}
 
 	.terminal-body {
-		height: 140px;
+		height: 200px;
 		overflow: auto;
 		border: 4px solid var(--outline);
 		border-radius: 10px;
@@ -713,9 +766,12 @@ serve piece of start() {
 	} */
 
 	/* Apply the panel background image to the CodeMirror root so the editor shows your SVG */
-	:global(.panel.editor .CodeMirror) {
-		/* margin-right: 1099999999999999999999990px !important; */
-	}
+	/* :global(.panel.editor .CodeMirror) {
+		background-image: var(--editor-img) !important;
+		background-position: left !important;
+		background-repeat: no-repeat !important;
+		background-size: auto !important;
+	} */
 
 	/* Ensure preformatted code uses the monospace font and no wrapping */
 	:global(.CodeMirror pre) {
@@ -726,5 +782,13 @@ serve piece of start() {
 		padding: 0 8px !important;
 		margin: 0 !important;
 		white-space: pre-wrap !important; /* allow wrapped lines */
+	}
+
+	/* Cursor color per theme */
+	:global(.ide[data-theme='dark'] .CodeMirror .CodeMirror-cursor) {
+		border-left: 1px solid #ffffff !important; /* white cursor for dark theme */
+	}
+	:global(.ide[data-theme='light'] .CodeMirror .CodeMirror-cursor) {
+		border-left: 1px solid #000000 !important; /* black cursor for light theme */
 	}
 </style>
