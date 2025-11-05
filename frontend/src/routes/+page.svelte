@@ -30,6 +30,9 @@
 		warning
 	} from '$lib';
 
+	import { onMount, onDestroy } from 'svelte';
+	import { loadScript, loadCSS, readFileAsText, saveContent } from '$lib/utils/browser';
+
 	let theme: 'dark' | 'light' = 'dark';
 	let activeTab: 'lexical' | 'syntax' | 'semantic' = 'lexical';
 
@@ -46,15 +49,102 @@ serve piece of start() {
 	let tokens: Token[] = [];
 	let isAnalyzing = false;
 
+	// CodeMirror integration
+	let textareaEl: HTMLTextAreaElement | null = null;
+	let cmInstance: any = null;
+
+	// file input for opening .platter files
+	let fileInputEl: HTMLInputElement;
+
+	function openFileDialog() {
+		fileInputEl?.click();
+	}
+
+	async function handleFileInput() {
+		const f = fileInputEl?.files?.[0];
+		if (!f) return;
+		if (!f.name || !f.name.toLowerCase().endsWith('.platter')) {
+			setTerminalError('Please select a .platter file');
+			fileInputEl.value = '';
+			return;
+		}
+		try {
+			const text = await readFileAsText(f);
+			codeInput = text;
+			if (cmInstance && typeof cmInstance.setValue === 'function') {
+				cmInstance.setValue(text);
+			}
+			setTerminalOk(`Opened ${f.name}`);
+		} catch (err) {
+			setTerminalError('Failed to read file');
+		} finally {
+			// reset input so the same file can be selected again
+			fileInputEl.value = '';
+		}
+	}
+
+	// Save current editor content as a .platter file. Uses the File System Access API when available,
+	// otherwise falls back to a download via an anchor element.
+	async function saveFileDialog() {
+		const content =
+			cmInstance && typeof cmInstance.getValue === 'function' ? cmInstance.getValue() : codeInput;
+		try {
+			const msg = await saveContent(content, 'program.platter');
+			setTerminalOk(msg);
+		} catch (err) {
+			const msg = err instanceof Error ? err.message : 'Save cancelled or failed';
+			setTerminalError(`Save failed: ${msg}`);
+		}
+	}
+
+	onMount(async () => {
+		try {
+			// load CodeMirror assets from CDN (lightweight integration)
+			await loadCSS('https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css');
+			// optional: a theme could be loaded here, but our overrides will ensure transparency
+			await loadScript(
+				'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js'
+			);
+			if (textareaEl && (window as any).CodeMirror) {
+				const CM = (window as any).CodeMirror;
+				cmInstance = CM.fromTextArea(textareaEl, {
+					lineNumbers: true,
+					// enable soft-wrapping so long lines flow to the next visual line
+					lineWrapping: true,
+					viewportMargin: Infinity
+				});
+				cmInstance.setSize('100%', '100%');
+				cmInstance.on('change', () => {
+					codeInput = cmInstance.getValue();
+				});
+			}
+		} catch (err) {
+			console.warn('Failed to load CodeMirror from CDN:', err);
+		}
+	});
+
+	onDestroy(() => {
+		if (cmInstance && typeof cmInstance.toTextArea === 'function') {
+			cmInstance.toTextArea();
+			cmInstance = null;
+		}
+	});
+
 	// Terminal messages
 	type TermMsg = { icon: string; text: string };
-	let termMessages: TermMsg[] = [{ icon: '✅', text: 'No Error' }];
+	// default to empty terminal (no messages) so termMessages.length === 0
+	let termMessages: TermMsg[] = [];
+
+	// Compute error count: treat messages that start with "Lexical OK" as non-errors (count as zero)
+	$: errorCount = termMessages.filter(
+		(m) => !(typeof m.text === 'string' && m.text.startsWith('Lexical OK'))
+	).length;
 
 	function setTerminalOk(message = 'No Error') {
 		termMessages = [{ icon: check, text: message }];
 	}
 	function setTerminalError(message: string) {
-		termMessages = [{ icon: errors, text: message }];
+		termMessages = [{ icon: errorIcon, text: message }];
 	}
 
 	async function analyzeLexical() {
@@ -92,7 +182,7 @@ serve piece of start() {
 			if (unknownTokens.length) {
 				// move unknown tokens into the terminal as individual error messages
 				termMessages = unknownTokens.map((u) => ({
-					icon: errors,
+					icon: errorIcon,
 					text: `Lexical error: line ${u.line} col ${u.col} - invalid character ${u.value}`
 				}));
 				// also set a concise terminal summary
@@ -192,6 +282,7 @@ serve piece of start() {
 			<div class="panel editor" style={`--editor-img: url(${theme === 'dark' ? editor : editor1})`}>
 				<textarea
 					class="editor-area"
+					bind:this={textareaEl}
 					bind:value={codeInput}
 					placeholder="Write your Platter code here..."
 					spellcheck="false"
@@ -205,8 +296,14 @@ serve piece of start() {
 			>
 				<div class="terminal-head">
 					<span class="title">Terminal</span>
-					<!-- error count -->
-					<span class="counter">Error: {termMessages.length}</span>
+					<!-- error count (ignore 'Lexical OK' messages) -->
+
+					<div class="counter">
+						<span>Errors: {errorCount} </span>
+						{#if errorCount > 0}
+							<img class="icon" src={warning} alt="warning" />
+						{/if}
+					</div>
 				</div>
 				<div class="terminal-body">
 					{#each termMessages as e}
@@ -229,7 +326,7 @@ serve piece of start() {
 						<img class="icon" src={newFile1} alt="Light Theme Icon" />
 					{/if} <span>New File</span></button
 				>
-				<button class="btn">
+				<button class="btn" type="button" on:click={openFileDialog}>
 					{#if theme === 'dark'}
 						<img class="icon" src={openFile} alt="Dark Theme Icon" />
 					{:else}
@@ -237,8 +334,16 @@ serve piece of start() {
 					{/if}
 					<span>Open File</span></button
 				>
-				<button class="btn"
-					>{#if theme === 'dark'}
+				<!-- hidden file input for opening .platter files -->
+				<input
+					type="file"
+					accept=".platter"
+					bind:this={fileInputEl}
+					on:change={handleFileInput}
+					style="display:none"
+				/>
+				<button class="btn" type="button" on:click={saveFileDialog}>
+					{#if theme === 'dark'}
 						<img class="icon" src={saveFile} alt="Dark Theme Icon" />
 					{:else}
 						<img class="icon" src={saveFile1} alt="Light Theme Icon" />
@@ -432,7 +537,7 @@ serve piece of start() {
 		box-shadow: none;
 	}
 	.editor + .terminal {
-		margin-top: 14px;
+		margin-top: 10px;
 
 		border: none;
 	}
@@ -454,8 +559,8 @@ serve piece of start() {
 	}
 
 	.editor-area {
-		width: 90%;
-		height: 450px;
+		width: 95.5%;
+		height: 400px;
 		background: transparent;
 		color: var(--ink);
 		outline: none;
@@ -463,13 +568,13 @@ serve piece of start() {
 			ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
 		font-size: 18px;
 		margin-left: 30px;
-		margin-top: 80px;
+		margin-top: 60px;
+		margin-bottom: 80px;
 		border: none;
 	}
 
 	.terminal-head {
 		display: flex;
-		justify-content: space-between;
 		align-items: center;
 		margin-bottom: 8px;
 		color: var(--ink);
@@ -477,14 +582,18 @@ serve piece of start() {
 		box-shadow: none;
 	}
 	.counter {
+		display: flex;
+		align-items: center;
+		gap: 8px;
 		border-radius: 10px;
-		margin-right: 10px;
-		scale: 0.7;
+		margin: 0;
+		transform: scale(0.7);
+		margin-left: 400px;
 		margin-bottom: 6px;
 	}
 
 	.terminal-body {
-		height: 140px;
+		height: 200px;
 		overflow: auto;
 		border: 4px solid var(--outline);
 		border-radius: 10px;
@@ -608,5 +717,72 @@ serve piece of start() {
 		.grid {
 			grid-template-columns: 1fr;
 		}
+	}
+
+	/* Strong CodeMirror overrides to ensure transparency and inherit panel background
+   Use !important to beat CDN-loaded CodeMirror theme CSS if present */
+	:global(.CodeMirror),
+	:global(.CodeMirror-scroll),
+	:global(.CodeMirror-gutters),
+	:global(.CodeMirror pre) {
+		background: transparent !important;
+		color: inherit !important;
+	}
+
+	:global(.CodeMirror) {
+		height: 100% !important;
+		box-shadow: none !important;
+		border: none !important;
+		width: 97% !important;
+		height: 400px !important;
+		outline: none !important;
+		font-family:
+			ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace !important;
+		/* font-size: 18px !important; */
+		margin-left: 10px !important;
+		margin-top: 60px !important;
+		margin-bottom: 80px !important;
+		border: none !important;
+	}
+
+	:global(.CodeMirror-scroll) {
+		/* disable horizontal scrolling and allow wrapping */
+		overflow-x: hidden !important;
+		overflow-y: auto !important;
+		white-space: pre-wrap !important; /* allow wrap onto next line */
+	}
+
+	/* Make gutters transparent and inherit muted color */
+	/* :global(.CodeMirror-gutters) {
+		background: transparent !important;
+		border-right: 4px solid var(--outline) !important;
+		color: var(--ink-muted) !important;
+	} */
+
+	/* Apply the panel background image to the CodeMirror root so the editor shows your SVG */
+	/* :global(.panel.editor .CodeMirror) {
+		background-image: var(--editor-img) !important;
+		background-position: left !important;
+		background-repeat: no-repeat !important;
+		background-size: auto !important;
+	} */
+
+	/* Ensure preformatted code uses the monospace font and no wrapping */
+	:global(.CodeMirror pre) {
+		font-family:
+			ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace !important;
+		font-size: 18px !important;
+		line-height: 20px !important;
+		padding: 0 8px !important;
+		margin: 0 !important;
+		white-space: pre-wrap !important; /* allow wrapped lines */
+	}
+
+	/* Cursor color per theme */
+	:global(.ide[data-theme='dark'] .CodeMirror .CodeMirror-cursor) {
+		border-left: 1px solid #ffffff !important; /* white cursor for dark theme */
+	}
+	:global(.ide[data-theme='light'] .CodeMirror .CodeMirror-cursor) {
+		border-left: 1px solid #000000 !important; /* black cursor for light theme */
 	}
 </style>
