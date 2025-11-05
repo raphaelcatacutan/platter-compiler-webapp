@@ -82,6 +82,45 @@ serve piece of start() {
 		}
 	}
 
+	// Save current editor content as a .platter file. Uses the File System Access API when available,
+	// otherwise falls back to a download via an anchor element.
+	async function saveFileDialog() {
+		const content =
+			cmInstance && typeof cmInstance.getValue === 'function' ? cmInstance.getValue() : codeInput;
+		try {
+			if ((window as any).showSaveFilePicker) {
+				const opts = {
+					types: [
+						{
+							description: 'Platter files',
+							accept: { 'text/plain': ['.platter'] }
+						}
+					]
+				};
+				const handle = await (window as any).showSaveFilePicker(opts);
+				const writable = await handle.createWritable();
+				await writable.write(content);
+				await writable.close();
+				setTerminalOk(`Saved ${handle.name ?? 'file'}`);
+			} else {
+				// fallback: trigger a download
+				const blob = new Blob([content], { type: 'text/plain' });
+				const url = URL.createObjectURL(blob);
+				const a = document.createElement('a');
+				a.href = url;
+				a.download = 'program.platter';
+				document.body.appendChild(a);
+				a.click();
+				a.remove();
+				URL.revokeObjectURL(url);
+				setTerminalOk('Downloaded program.platter');
+			}
+		} catch (err) {
+			const msg = err instanceof Error ? err.message : 'Save cancelled or failed';
+			setTerminalError(`Save failed: ${msg}`);
+		}
+	}
+
 	function loadScript(url: string) {
 		return new Promise((resolve, reject) => {
 			const s = document.createElement('script');
@@ -348,8 +387,8 @@ serve piece of start() {
 					on:change={handleFileInput}
 					style="display:none"
 				/>
-				<button class="btn"
-					>{#if theme === 'dark'}
+				<button class="btn" type="button" on:click={saveFileDialog}>
+					{#if theme === 'dark'}
 						<img class="icon" src={saveFile} alt="Dark Theme Icon" />
 					{:else}
 						<img class="icon" src={saveFile1} alt="Light Theme Icon" />
