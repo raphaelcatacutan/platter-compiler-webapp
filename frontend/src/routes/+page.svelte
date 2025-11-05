@@ -31,6 +31,7 @@
 	} from '$lib';
 
 	import { onMount, onDestroy } from 'svelte';
+	import { loadScript, loadCSS, readFileAsText, saveContent } from '$lib/utils/browser';
 
 	let theme: 'dark' | 'light' = 'dark';
 	let activeTab: 'lexical' | 'syntax' | 'semantic' = 'lexical';
@@ -68,7 +69,7 @@ serve piece of start() {
 			return;
 		}
 		try {
-			const text = await f.text();
+			const text = await readFileAsText(f);
 			codeInput = text;
 			if (cmInstance && typeof cmInstance.setValue === 'function') {
 				cmInstance.setValue(text);
@@ -88,58 +89,12 @@ serve piece of start() {
 		const content =
 			cmInstance && typeof cmInstance.getValue === 'function' ? cmInstance.getValue() : codeInput;
 		try {
-			if ((window as any).showSaveFilePicker) {
-				const opts = {
-					types: [
-						{
-							description: 'Platter files',
-							accept: { 'text/plain': ['.platter'] }
-						}
-					]
-				};
-				const handle = await (window as any).showSaveFilePicker(opts);
-				const writable = await handle.createWritable();
-				await writable.write(content);
-				await writable.close();
-				setTerminalOk(`Saved ${handle.name ?? 'file'}`);
-			} else {
-				// fallback: trigger a download
-				const blob = new Blob([content], { type: 'text/plain' });
-				const url = URL.createObjectURL(blob);
-				const a = document.createElement('a');
-				a.href = url;
-				a.download = 'program.platter';
-				document.body.appendChild(a);
-				a.click();
-				a.remove();
-				URL.revokeObjectURL(url);
-				setTerminalOk('Downloaded program.platter');
-			}
+			const msg = await saveContent(content, 'program.platter');
+			setTerminalOk(msg);
 		} catch (err) {
 			const msg = err instanceof Error ? err.message : 'Save cancelled or failed';
 			setTerminalError(`Save failed: ${msg}`);
 		}
-	}
-
-	function loadScript(url: string) {
-		return new Promise((resolve, reject) => {
-			const s = document.createElement('script');
-			s.src = url;
-			s.onload = () => resolve(null);
-			s.onerror = (e) => reject(e);
-			document.head.appendChild(s);
-		});
-	}
-
-	function loadCSS(url: string) {
-		return new Promise((resolve, reject) => {
-			const l = document.createElement('link');
-			l.rel = 'stylesheet';
-			l.href = url;
-			l.onload = () => resolve(null);
-			l.onerror = (e) => reject(e);
-			document.head.appendChild(l);
-		});
 	}
 
 	onMount(async () => {
