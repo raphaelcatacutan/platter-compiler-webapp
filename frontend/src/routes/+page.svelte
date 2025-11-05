@@ -54,7 +54,7 @@ serve piece of start() {
 		termMessages = [{ icon: check, text: message }];
 	}
 	function setTerminalError(message: string) {
-		termMessages = [{ icon: errors, text: message }];
+		termMessages = [{ icon: errorIcon, text: message }];
 	}
 
 	async function analyzeLexical() {
@@ -92,7 +92,7 @@ serve piece of start() {
 			if (unknownTokens.length) {
 				// move unknown tokens into the terminal as individual error messages
 				termMessages = unknownTokens.map((u) => ({
-					icon: errors,
+					icon: errorIcon,
 					text: `Lexical error: line ${u.line} col ${u.col} - invalid character ${u.value}`
 				}));
 				// also set a concise terminal summary
@@ -454,8 +454,8 @@ serve piece of start() {
 	}
 
 	.editor-area {
-		width: 90%;
-		height: 450px;
+		width: 95.5%;
+		height: 400px;
 		background: transparent;
 		color: var(--ink);
 		outline: none;
@@ -463,7 +463,8 @@ serve piece of start() {
 			ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
 		font-size: 18px;
 		margin-left: 30px;
-		margin-top: 80px;
+		margin-top: 60px;
+		margin-bottom: 80px;
 		border: none;
 	}
 
