@@ -771,7 +771,7 @@ serve piece of start() {
 	:global(.CodeMirror pre) {
 		font-family:
 			ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace !important;
-		font-size: 14px !important;
+		font-size: 18px !important;
 		line-height: 20px !important;
 		padding: 0 8px !important;
 		margin: 0 !important;
