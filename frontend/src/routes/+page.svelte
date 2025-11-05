@@ -30,6 +30,8 @@
 		warning
 	} from '$lib';
 
+	import { onMount, onDestroy } from 'svelte';
+
 	let theme: 'dark' | 'light' = 'dark';
 	let activeTab: 'lexical' | 'syntax' | 'semantic' = 'lexical';
 
@@ -45,6 +47,64 @@ serve piece of start() {
 	const lexerRows: Array<{ lexeme: string; token: string }> = [];
 	let tokens: Token[] = [];
 	let isAnalyzing = false;
+
+	// CodeMirror integration
+	let textareaEl: HTMLTextAreaElement | null = null;
+	let cmInstance: any = null;
+
+	function loadScript(url: string) {
+		return new Promise((resolve, reject) => {
+			const s = document.createElement('script');
+			s.src = url;
+			s.onload = () => resolve(null);
+			s.onerror = (e) => reject(e);
+			document.head.appendChild(s);
+		});
+	}
+
+	function loadCSS(url: string) {
+		return new Promise((resolve, reject) => {
+			const l = document.createElement('link');
+			l.rel = 'stylesheet';
+			l.href = url;
+			l.onload = () => resolve(null);
+			l.onerror = (e) => reject(e);
+			document.head.appendChild(l);
+		});
+	}
+
+	onMount(async () => {
+		try {
+			// load CodeMirror assets from CDN (lightweight integration)
+			await loadCSS('https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css');
+			// optional: a theme could be loaded here, but our overrides will ensure transparency
+			await loadScript(
+				'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js'
+			);
+			if (textareaEl && (window as any).CodeMirror) {
+				const CM = (window as any).CodeMirror;
+				cmInstance = CM.fromTextArea(textareaEl, {
+					lineNumbers: true,
+					// enable soft-wrapping so long lines flow to the next visual line
+					lineWrapping: true,
+					viewportMargin: Infinity
+				});
+				cmInstance.setSize('100%', '100%');
+				cmInstance.on('change', () => {
+					codeInput = cmInstance.getValue();
+				});
+			}
+		} catch (err) {
+			console.warn('Failed to load CodeMirror from CDN:', err);
+		}
+	});
+
+	onDestroy(() => {
+		if (cmInstance && typeof cmInstance.toTextArea === 'function') {
+			cmInstance.toTextArea();
+			cmInstance = null;
+		}
+	});
 
 	// Terminal messages
 	type TermMsg = { icon: string; text: string };
@@ -192,6 +252,7 @@ serve piece of start() {
 			<div class="panel editor" style={`--editor-img: url(${theme === 'dark' ? editor : editor1})`}>
 				<textarea
 					class="editor-area"
+					bind:this={textareaEl}
 					bind:value={codeInput}
 					placeholder="Write your Platter code here..."
 					spellcheck="false"
@@ -609,5 +670,61 @@ serve piece of start() {
 		.grid {
 			grid-template-columns: 1fr;
 		}
+	}
+
+	/* Strong CodeMirror overrides to ensure transparency and inherit panel background
+   Use !important to beat CDN-loaded CodeMirror theme CSS if present */
+	:global(.CodeMirror),
+	:global(.CodeMirror-scroll),
+	:global(.CodeMirror-gutters),
+	:global(.CodeMirror pre) {
+		background: transparent !important;
+		color: inherit !important;
+	}
+
+	:global(.CodeMirror) {
+		height: 100% !important;
+		box-shadow: none !important;
+		border: none !important;
+		width: 97% !important;
+		height: 400px !important;
+		outline: none !important;
+		font-family:
+			ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace !important;
+		/* font-size: 18px !important; */
+		margin-left: 10px !important;
+		margin-top: 60px !important;
+		margin-bottom: 80px !important;
+		border: none !important;
+	}
+
+	:global(.CodeMirror-scroll) {
+		/* disable horizontal scrolling and allow wrapping */
+		overflow-x: hidden !important;
+		overflow-y: auto !important;
+		white-space: pre-wrap !important; /* allow wrap onto next line */
+	}
+
+	/* Make gutters transparent and inherit muted color */
+	/* :global(.CodeMirror-gutters) {
+		background: transparent !important;
+		border-right: 4px solid var(--outline) !important;
+		color: var(--ink-muted) !important;
+	} */
+
+	/* Apply the panel background image to the CodeMirror root so the editor shows your SVG */
+	:global(.panel.editor .CodeMirror) {
+		/* margin-right: 1099999999999999999999990px !important; */
+	}
+
+	/* Ensure preformatted code uses the monospace font and no wrapping */
+	:global(.CodeMirror pre) {
+		font-family:
+			ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace !important;
+		font-size: 14px !important;
+		line-height: 20px !important;
+		padding: 0 8px !important;
+		margin: 0 !important;
+		white-space: pre-wrap !important; /* allow wrapped lines */
 	}
 </style>
