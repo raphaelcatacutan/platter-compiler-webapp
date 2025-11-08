@@ -650,306 +650,267 @@ class Lexer:
             self.advance()
             return Token(";", ";", self.line, self.col)
 
-        # identifier
-        id_delim = " \n\t()[];=+-*/%!<>,:"
-        if self.current is not None and (self.current.isalpha() or self.current == "_"):
+        # -- Helper Strings --
+        # explicitly defined as requested, no .isalpha() or .isdigit()
+        ID_START = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"
+        ID_BODY = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789"
+        DIGITS = "0123456789"
+
+        # =========================
+        # 1. IDENTIFIERS (Max 25 chars)
+        # =========================
+        if self.current is not None and self.current in ID_START:
             start_col = self.col
             start_pos = self.pos
+            self.advance()
 
-            if self.current is None or self.current in id_delim:
-                return Token("id", "", self.line, start_col)
-            self.advance()
-            if self.current is None or self.current in id_delim:
-                return Token("id", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-            if self.current is None or self.current in id_delim:
-                return Token("id", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-            if self.current is None or self.current in id_delim:
-                return Token("id", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-            if self.current is None or self.current in id_delim:
-                return Token("id", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-            if self.current is None or self.current in id_delim:
-                return Token("id", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-            if self.current is None or self.current in id_delim:
-                return Token("id", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-            if self.current is None or self.current in id_delim:
-                return Token("id", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-            if self.current is None or self.current in id_delim:
-                return Token("id", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-            if self.current is None or self.current in id_delim:
-                return Token("id", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-            if self.current is None or self.current in id_delim:
-                return Token("id", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-            if self.current is None or self.current in id_delim:
-                return Token("id", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-            if self.current is None or self.current in id_delim:
-                return Token("id", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-            if self.current is None or self.current in id_delim:
-                return Token("id", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-            if self.current is None or self.current in id_delim:
-                return Token("id", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-            if self.current is None or self.current in id_delim:
-                return Token("id", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-            if self.current is None or self.current in id_delim:
-                return Token("id", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-            if self.current is None or self.current in id_delim:
-                return Token("id", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-            if self.current is None or self.current in id_delim:
-                return Token("id", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-            if self.current is None or self.current in id_delim:
-                return Token("id", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-            if self.current is None or self.current in id_delim:
-                return Token("id", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-            if self.current is None or self.current in id_delim:
-                return Token("id", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-            if self.current is None or self.current in id_delim:
-                return Token("id", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-            if self.current is None or self.current in id_delim:
+            # We use a 'ladder' pattern: check if next char is valid.
+            # If YES: advance and continue deeper into the nest.
+            # If NO (or None): we hit a delimiter, return the token immediately.
+
+            # Char 2
+            if self.current is not None and self.current in ID_BODY:
+                self.advance()
+                # Char 3
+                if self.current is not None and self.current in ID_BODY:
+                    self.advance()
+                    # Char 4
+                    if self.current is not None and self.current in ID_BODY:
+                        self.advance()
+                        # Char 5
+                        if self.current is not None and self.current in ID_BODY:
+                            self.advance()
+                            # Char 6
+                            if self.current is not None and self.current in ID_BODY:
+                                self.advance()
+                                # Char 7
+                                if self.current is not None and self.current in ID_BODY:
+                                    self.advance()
+                                    # Char 8
+                                    if self.current is not None and self.current in ID_BODY:
+                                        self.advance()
+                                        # Char 9
+                                        if self.current is not None and self.current in ID_BODY:
+                                            self.advance()
+                                            # Char 10
+                                            if self.current is not None and self.current in ID_BODY:
+                                                self.advance()
+                                                # Char 11
+                                                if self.current is not None and self.current in ID_BODY:
+                                                    self.advance()
+                                                    # Char 12
+                                                    if self.current is not None and self.current in ID_BODY:
+                                                        self.advance()
+                                                        # Char 13
+                                                        if self.current is not None and self.current in ID_BODY:
+                                                            self.advance()
+                                                            # Char 14
+                                                            if self.current is not None and self.current in ID_BODY:
+                                                                self.advance()
+                                                                # Char 15
+                                                                if self.current is not None and self.current in ID_BODY:
+                                                                    self.advance()
+                                                                    # Char 16
+                                                                    if self.current is not None and self.current in ID_BODY:
+                                                                        self.advance()
+                                                                        # Char 17
+                                                                        if self.current is not None and self.current in ID_BODY:
+                                                                            self.advance()
+                                                                            # Char 18
+                                                                            if self.current is not None and self.current in ID_BODY:
+                                                                                self.advance()
+                                                                                # Char 19
+                                                                                if self.current is not None and self.current in ID_BODY:
+                                                                                    self.advance()
+                                                                                    # Char 20
+                                                                                    if self.current is not None and self.current in ID_BODY:
+                                                                                        self.advance()
+                                                                                        # Char 21
+                                                                                        if self.current is not None and self.current in ID_BODY:
+                                                                                            self.advance()
+                                                                                            # Char 22
+                                                                                            if self.current is not None and self.current in ID_BODY:
+                                                                                                self.advance()
+                                                                                                # Char 23
+                                                                                                if self.current is not None and self.current in ID_BODY:
+                                                                                                    self.advance()
+                                                                                                    # Char 24
+                                                                                                    if self.current is not None and self.current in ID_BODY:
+                                                                                                        self.advance()
+                                                                                                        # Char 25 (Last allowed)
+                                                                                                        if self.current is not None and self.current in ID_BODY:
+                                                                                                            self.advance()
+                                                                                                            # If 26th char exists, it's a delimiter for our purposes now.
+
                 return Token("id", self.text[start_pos:self.pos], self.line, start_col)
 
-        # numbers
-        num_delim = " \n\t()[];=+-*/%!<>,:"
-        if self.current is not None and (self.current.isdigit() or self.current == "-"):
+        # =========================
+        # 2. NUMBERS (15 whole + 7 decimal)
+        # =========================
+        if self.current is not None and (self.current in DIGITS or self.current == "-"):
             start_col = self.col
             start_pos = self.pos
+            is_decimal = False
 
-            # negative
+            # Handle negative sign
             if self.current == "-":
                 self.advance()
-                if self.current is None or self.current in num_delim:
+                # If standard demands it must have a digit after '-', check here:
+                if self.current is None or self.current not in DIGITS:
                     return Token("-", "-", self.line, start_col)
 
-            # digit 1
-            if self.current is None or self.current in num_delim:
-                return Token("piece_lit", self.text[start_pos:self.pos], self.line, start_col)
-            if not self.current.isdigit():
-                return Token("piece_lit", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-
-            # digit 2
-            if self.current is None or self.current in num_delim:
-                return Token("piece_lit", self.text[start_pos:self.pos], self.line, start_col)
-            if self.current == ".":
-                goto_decimal = True
-            elif self.current.isdigit():
-                goto_decimal = False
-            else:
-                return Token("piece_lit", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-
-            # digit 3
-            if self.current is None or self.current in num_delim:
-                return Token("piece_lit", self.text[start_pos:self.pos], self.line, start_col)
-            if self.current == ".":
-                goto_decimal = True
-            elif not self.current.isdigit():
-                return Token("piece_lit", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-
-            # digit 4
-            if self.current is None or self.current in num_delim:
-                return Token("piece_lit", self.text[start_pos:self.pos], self.line, start_col)
-            if self.current == ".":
-                goto_decimal = True
-            elif not self.current.isdigit():
-                return Token("piece_lit", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-
-            # digit 5
-            if self.current is None or self.current in num_delim:
-                return Token("piece_lit", self.text[start_pos:self.pos], self.line, start_col)
-            if self.current == ".":
-                goto_decimal = True
-            elif not self.current.isdigit():
-                return Token("piece_lit", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-
-            # digit 6
-            if self.current is None or self.current in num_delim:
-                return Token("piece_lit", self.text[start_pos:self.pos], self.line, start_col)
-            if self.current == ".":
-                goto_decimal = True
-            elif not self.current.isdigit():
-                return Token("piece_lit", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-
-            # digit 7
-            if self.current is None or self.current in num_delim:
-                return Token("piece_lit", self.text[start_pos:self.pos], self.line, start_col)
-            if self.current == ".":
-                goto_decimal = True
-            elif not self.current.isdigit():
-                return Token("piece_lit", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-
-            # digit 8
-            if self.current is None or self.current in num_delim:
-                return Token("piece_lit", self.text[start_pos:self.pos], self.line, start_col)
-            if self.current == ".":
-                goto_decimal = True
-            elif not self.current.isdigit():
-                return Token("piece_lit", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-
-            # digit 9
-            if self.current is None or self.current in num_delim:
-                return Token("piece_lit", self.text[start_pos:self.pos], self.line, start_col)
-            if self.current == ".":
-                goto_decimal = True
-            elif not self.current.isdigit():
-                return Token("piece_lit", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-
-            # digit 10
-            if self.current is None or self.current in num_delim:
-                return Token("piece_lit", self.text[start_pos:self.pos], self.line, start_col)
-            if self.current == ".":
-                goto_decimal = True
-            elif not self.current.isdigit():
-                return Token("piece_lit", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-
-            # digit 11
-            if self.current is None or self.current in num_delim:
-                return Token("piece_lit", self.text[start_pos:self.pos], self.line, start_col)
-            if self.current == ".":
-                goto_decimal = True
-            elif not self.current.isdigit():
-                return Token("piece_lit", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-
-            # digit 12
-            if self.current is None or self.current in num_delim:
-                return Token("piece_lit", self.text[start_pos:self.pos], self.line, start_col)
-            if self.current == ".":
-                goto_decimal = True
-            elif not self.current.isdigit():
-                return Token("piece_lit", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-
-            # digit 13
-            if self.current is None or self.current in num_delim:
-                return Token("piece_lit", self.text[start_pos:self.pos], self.line, start_col)
-            if self.current == ".":
-                goto_decimal = True
-            elif not self.current.isdigit():
-                return Token("piece_lit", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-
-            # digit 14
-            if self.current is None or self.current in num_delim:
-                return Token("piece_lit", self.text[start_pos:self.pos], self.line, start_col)
-            if self.current == ".":
-                goto_decimal = True
-            elif not self.current.isdigit():
-                return Token("piece_lit", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-
-            # digit 15 (last whole number digit)
-            if self.current is None or self.current in num_delim:
-                return Token("piece_lit", self.text[start_pos:self.pos], self.line, start_col)
-            if self.current == ".":
+            # --- WHOLE NUMBER PART (Max 15) ---
+            # Digit 1
+            if self.current is not None and self.current in DIGITS:
                 self.advance()
-                goto_decimal = True
-            elif not self.current.isdigit():
-                return Token("piece_lit", self.text[start_pos:self.pos], self.line, start_col)
-            else:
-                goto_decimal = False
-            if not goto_decimal:
-                return Token("piece_lit", self.text[start_pos:self.pos], self.line, start_col)
-
-            # decimal part (7 digits max)
-            # digit 1
-            if self.current is None or self.current in num_delim or not self.current.isdigit():
-                return Token("sip_lit", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-            # digit 2
-            if self.current is None or self.current in num_delim or not self.current.isdigit():
-                return Token("sip_lit", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-            # digit 3
-            if self.current is None or self.current in num_delim or not self.current.isdigit():
-                return Token("sip_lit", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-            # digit 4
-            if self.current is None or self.current in num_delim or not self.current.isdigit():
-                return Token("sip_lit", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-            # digit 5
-            if self.current is None or self.current in num_delim or not self.current.isdigit():
-                return Token("sip_lit", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-            # digit 6
-            if self.current is None or self.current in num_delim or not self.current.isdigit():
-                return Token("sip_lit", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-            # digit 7
-            if self.current is None or self.current in num_delim or not self.current.isdigit():
-                return Token("sip_lit", self.text[start_pos:self.pos], self.line, start_col)
-            self.advance()
-
-        # chars
-        if self.current == '"':
-            start_pos = self.pos
-            start_col = self.col
-            self.advance()
-            while self.current is not None and self.current != '"':
-                if self.current == "\\" and self.pos + 1 < len(self.text):
+                # Digit 2
+                if self.current is not None and self.current in DIGITS:
                     self.advance()
+                    # Digit 3
+                    if self.current is not None and self.current in DIGITS:
+                        self.advance()
+                        # Digit 4
+                        if self.current is not None and self.current in DIGITS:
+                            self.advance()
+                            # Digit 5
+                            if self.current is not None and self.current in DIGITS:
+                                self.advance()
+                                # Digit 6
+                                if self.current is not None and self.current in DIGITS:
+                                    self.advance()
+                                    # Digit 7
+                                    if self.current is not None and self.current in DIGITS:
+                                        self.advance()
+                                        # Digit 8
+                                        if self.current is not None and self.current in DIGITS:
+                                            self.advance()
+                                            # Digit 9
+                                            if self.current is not None and self.current in DIGITS:
+                                                self.advance()
+                                                # Digit 10
+                                                if self.current is not None and self.current in DIGITS:
+                                                    self.advance()
+                                                    # Digit 11
+                                                    if self.current is not None and self.current in DIGITS:
+                                                        self.advance()
+                                                        # Digit 12
+                                                        if self.current is not None and self.current in DIGITS:
+                                                            self.advance()
+                                                            # Digit 13
+                                                            if self.current is not None and self.current in DIGITS:
+                                                                self.advance()
+                                                                # Digit 14
+                                                                if self.current is not None and self.current in DIGITS:
+                                                                    self.advance()
+                                                                    # Digit 15
+                                                                    if self.current is not None and self.current in DIGITS:
+                                                                        self.advance()
+
+            # --- DECIMAL PART (Max 7) ---
+            # We check for '.' after any of the whole digits above might have finished.
+            if self.current == ".":
+                is_decimal = True
                 self.advance()
+                # Dec 1
+                if self.current is not None and self.current in DIGITS:
+                    self.advance()
+                    # Dec 2
+                    if self.current is not None and self.current in DIGITS:
+                        self.advance()
+                        # Dec 3
+                        if self.current is not None and self.current in DIGITS:
+                            self.advance()
+                            # Dec 4
+                            if self.current is not None and self.current in DIGITS:
+                                self.advance()
+                                # Dec 5
+                                if self.current is not None and self.current in DIGITS:
+                                    self.advance()
+                                    # Dec 6
+                                    if self.current is not None and self.current in DIGITS:
+                                        self.advance()
+                                        # Dec 7
+                                        if self.current is not None and self.current in DIGITS:
+                                            self.advance()
+
+                token_type = "sip_lit" if is_decimal else "piece_lit"
+                return Token(token_type, self.text[start_pos:self.pos], self.line, start_col)
+
+            # =========================
+            # 3. STRING LITERALS (Unlimited length via recursion)
+            # =========================
             if self.current == '"':
-                self.advance()
-                return Token("chars_lit", self.text[start_pos:self.pos], self.line, start_col)
-            return Token("UNKNOWN", self.text[start_pos:self.pos], self.line, start_col)
-
-        # comments
-        if self.current == "#":
-            start_col = self.col
-            self.advance()
-            if self.current == "#":  # multi-line
-                self.advance()
+                start_col = self.col
                 start_pos = self.pos
-                while self.current is not None:
-                    if self.current == "#" and self.pos + 1 < len(self.text) and self.text[self.pos + 1] == "#":
-                        self.advance()
-                        self.advance()
-                        return Token("comment_multi", self.text[start_pos:self.pos - 2], self.line, start_col)
-                    self.advance()
-                return Token("UNKNOWN", "#", self.line, start_col)
-            elif self.current == " ":
-                self.advance()
-                start_pos = self.pos
-                while self.current is not None and self.current != "\n":
-                    self.advance()
-                return Token("comment_single", self.text[start_pos:self.pos], self.line, start_col)
-            return Token("UNKNOWN", "#", self.line, start_col)
+                self.advance()  # skip opening "
 
-        ch = self.current
-        start_col = self.col
+                self._consume_until_quote()
+
+                if self.current == '"':
+                    self.advance()  # skip closing "
+                    return Token("chars_lit", self.text[start_pos:self.pos], self.line, start_col)
+                return Token("UNKNOWN", self.text[start_pos:self.pos], self.line, start_col)
+
+            # =========================
+            # 4. COMMENTS (Unlimited length via recursion)
+            # =========================
+            if self.current == '#':
+                start_col = self.col
+                start_pos = self.pos
+                self.advance()
+
+                if self.current == '#':  # Multi-line start '##'
+                    self.advance()
+                    # Find closing '##'
+                    if self._consume_until_multiline_end():
+                        # We found '##'. The current pos is AFTER the second '#'.
+                        # We want the content BETWEEN the '##' markers.
+                        # start_pos + 2 skips the first '##'
+                        # self.pos - 2 excludes the last '##'
+                        return Token("comment_multi", self.text[start_pos + 2: self.pos - 2], self.line, start_col)
+                    return Token("UNKNOWN", self.text[start_pos:self.pos], self.line, start_col)
+                else:  # Single-line start '#'
+                    self._consume_until_newline()
+                    return Token("comment_single", self.text[start_pos:self.pos], self.line, start_col)
+
+    def _consume_until_quote(self):
+        """Recursively consumes characters until '"' or EOF."""
+        if self.current is None or self.current == '"':
+            return
+        # Handle escape sequence (simple version)
+        if self.current == '\\':
+            self.advance()  # consume '\'
+            if self.current is not None:
+                self.advance()  # consume escaped char
+            self._consume_until_quote()  # recurse
+            return
+
         self.advance()
-        return Token("UNKNOWN", ch, self.line, start_col)
+        self._consume_until_quote()  # recurse
 
+    def _consume_until_newline(self):
+        """Recursively consumes characters until '\n' or EOF."""
+        if self.current is None or self.current == '\n':
+            return
+        self.advance()
+        self._consume_until_newline()
+
+    def _consume_until_multiline_end(self):
+        """Recursively consumes until '##' is found."""
+        if self.current is None:
+            return False  # EOF reached without closing
+
+        if self.current == '#':
+            self.advance()
+            if self.current == '#':
+                # Found closing '##'
+                return True
+            # Not '##', it was just a single '#'. Continue from here.
+            # We already advanced once, so we just recurse.
+            return self._consume_until_multiline_end()
+
+        self.advance()
+        return self._consume_until_multiline_end()
     def tokenize(self):
         tokens = []
         while True:
