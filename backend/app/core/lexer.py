@@ -6,8 +6,10 @@ class Token:
         self.col = col
 
     def __repr__(self):
-        return f"{self.type:<30} | line={self.line:<3} | col={self.col:<3} | {self.value:<25}"
+        return f"{self.type:<20} | line={self.line:<3} | col={self.col:<3} | {self.value:<25}"
 
+    InvalidCharacter = "Invalid Character"
+    InvalidLexeme = "Invalid Lexeme"
 
 class Lexer:
     def __init__(self, text):
@@ -596,17 +598,17 @@ class Lexer:
         # space
         if self.current == " ":
             self.advance()
-            return Token("space", "space", self.line, self.col)
+            return Token("space", " ", self.line, self.col)
 
         # tab
         if self.current == "\t":
             self.advance()
-            return Token("tab", "tab", self.line, self.col)
+            return Token("tab", "\\t", self.line, self.col)
 
         # newline
         if self.current == "\n":
             self.advance()
-            return Token("newline", "newline", self.line, self.col)
+            return Token("newline", "\\n", self.line, self.col)
 
         # colon
         if self.current == ":":
@@ -655,6 +657,8 @@ class Lexer:
         ID_START = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"
         ID_BODY = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789"
         DIGITS = "0123456789"
+        num_delim = " \t\n,()];=+-*/%!<>:"
+        id_delim = " \t\n()[];=+-*/%!<>,:"
 
         # =========================
         # 1. IDENTIFIERS (Max 25 chars)
@@ -737,12 +741,14 @@ class Lexer:
                                                                                                     # Char 24
                                                                                                     if self.current is not None and self.current in ID_BODY:
                                                                                                         self.advance()
-                                                                                                        # Char 25 (Last allowed)
-                                                                                                        if self.current is not None and self.current in ID_BODY:
-                                                                                                            self.advance()
-                                                                                                            # If 26th char exists, it's a delimiter for our purposes now.
 
+
+            if self.current in id_delim:
+                self.advance()
                 return Token("id", self.text[start_pos:self.pos], self.line, start_col)
+            else:
+                self.advance()
+                return Token("Invalid", self.text[start_pos:self.pos], self.line, start_col)
 
         # =========================
         # 2. NUMBERS (15 whole + 7 decimal)
@@ -751,6 +757,7 @@ class Lexer:
             start_col = self.col
             start_pos = self.pos
             is_decimal = False
+            token_type = "piece_lit"
 
             # Handle negative sign
             if self.current == "-":
@@ -834,44 +841,50 @@ class Lexer:
                                             self.advance()
 
                 token_type = "sip_lit" if is_decimal else "piece_lit"
-                return Token(token_type, self.text[start_pos:self.pos], self.line, start_col)
 
-            # =========================
-            # 3. STRING LITERALS (Unlimited length via recursion)
-            # =========================
-            if self.current == '"':
-                start_col = self.col
-                start_pos = self.pos
-                self.advance()  # skip opening "
-
-                self._consume_until_quote()
-
-                if self.current == '"':
-                    self.advance()  # skip closing "
-                    return Token("chars_lit", self.text[start_pos:self.pos], self.line, start_col)
-                return Token("UNKNOWN", self.text[start_pos:self.pos], self.line, start_col)
-
-            # =========================
-            # 4. COMMENTS (Unlimited length via recursion)
-            # =========================
-            if self.current == '#':
-                start_col = self.col
-                start_pos = self.pos
+            if self.current in num_delim:
                 self.advance()
+                return Token(token_type, self.text[start_pos:self.pos], self.line, start_col)
+            else:
+                self.advance()
+                return Token("Invalid", self.text[start_pos:self.pos], self.line, start_col)
 
-                if self.current == '#':  # Multi-line start '##'
-                    self.advance()
-                    # Find closing '##'
-                    if self._consume_until_multiline_end():
-                        # We found '##'. The current pos is AFTER the second '#'.
-                        # We want the content BETWEEN the '##' markers.
-                        # start_pos + 2 skips the first '##'
-                        # self.pos - 2 excludes the last '##'
-                        return Token("comment_multi", self.text[start_pos + 2: self.pos - 2], self.line, start_col)
-                    return Token("UNKNOWN", self.text[start_pos:self.pos], self.line, start_col)
-                else:  # Single-line start '#'
-                    self._consume_until_newline()
-                    return Token("comment_single", self.text[start_pos:self.pos], self.line, start_col)
+        # =========================
+        # 3. STRING LITERALS (Unlimited length via recursion)
+        # =========================
+        if self.current == '"':
+            start_col = self.col
+            start_pos = self.pos
+            self.advance()  # skip opening "
+
+            self._consume_until_quote()
+
+            if self.current == '"':
+                self.advance()  # skip closing "
+                return Token("chars_lit", self.text[start_pos:self.pos], self.line, start_col)
+            return Token("UNKNOWN", self.text[start_pos:self.pos], self.line, start_col)
+
+        # =========================
+        # 4. COMMENTS (Unlimited length via recursion)
+        # =========================
+        if self.current == '#':
+            start_col = self.col
+            start_pos = self.pos
+            self.advance()
+
+            if self.current == '#':  # Multi-line start '##'
+                self.advance()
+                # Find closing '##'
+                if self._consume_until_multiline_end():
+                    # We found '##'. The current pos is AFTER the second '#'.
+                    # We want the content BETWEEN the '##' markers.
+                    # start_pos + 2 skips the first '##'
+                    # self.pos - 2 excludes the last '##'
+                    return Token("comment_multi", self.text[start_pos + 2: self.pos - 2], self.line, start_col)
+                return Token("UNKNOWN", self.text[start_pos:self.pos], self.line, start_col)
+            else:  # Single-line start '#'
+                self._consume_until_newline()
+                return Token("comment_single", self.text[start_pos:self.pos], self.line, start_col)
 
     def _consume_until_quote(self):
         """Recursively consumes characters until '"' or EOF."""
@@ -898,19 +911,17 @@ class Lexer:
     def _consume_until_multiline_end(self):
         """Recursively consumes until '##' is found."""
         if self.current is None:
-            return False  # EOF reached without closing
+            return False
 
         if self.current == '#':
             self.advance()
             if self.current == '#':
-                # Found closing '##'
                 return True
-            # Not '##', it was just a single '#'. Continue from here.
-            # We already advanced once, so we just recurse.
             return self._consume_until_multiline_end()
 
         self.advance()
         return self._consume_until_multiline_end()
+        
     def tokenize(self):
         tokens = []
         while True:

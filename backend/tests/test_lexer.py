@@ -1,9 +1,9 @@
 
 from pprint import pprint
 
-from app.core.lexer import Lexer
+from app.core.lexer2 import Lexer
 
-with open("./tests/sample_programs/general.platter", "r", encoding="utf-8") as f:
+with open("./tests/sample_programs/lexer_2.platter", "r", encoding="utf-8") as f:
     source = f.read()
 
 lexer = Lexer(source)
