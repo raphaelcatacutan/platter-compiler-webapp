@@ -211,7 +211,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.paren_dlm):
             return Token("alt", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     def s5(self):  # an
         self.advance()
@@ -222,7 +222,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.paren_dlm):
             return Token("and", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     def s8(self):  # ap
         self.advance()
@@ -248,7 +248,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.paren_dlm):
             return Token("append", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     # --- 'b' ---
     def s14(self):  # b
@@ -270,7 +270,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.paren_dlm):
             return Token("bill", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     # --- 'c' ---
     def s19(self):  # c
@@ -300,7 +300,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.dtype_dlm):
             return Token("chars", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     def s25(self):  # che
         self.advance()
@@ -316,7 +316,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.paren_dlm):
             return Token("check", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     def s29(self):  # cho
         self.advance()
@@ -338,7 +338,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.whitespace_dlm):
             return Token("choice", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     def s34(self):  # cop
         self.advance()
@@ -349,7 +349,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.paren_dlm):
             return Token("copy", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     def s38(self):  # cu
         self.advance()
@@ -360,7 +360,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.paren_dlm):
             return Token("cut", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     # --- 'd' ---
     def s41(self):  # d
@@ -382,7 +382,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.flag_dlm):
             return Token("flag_lit", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     # --- 'f' ---
     def s46(self):  # f
@@ -405,7 +405,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.paren_dlm):
             return Token("fact", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     def s51(self):  # fl
         self.advance()
@@ -421,7 +421,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.dtype_dlm):
             return Token("flag", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     # --- 'i' ---
     def s55(self):  # i
@@ -458,7 +458,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.curly_dlm):
             return Token("instead", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     # --- 'm' ---
     def s63(self):  # m
@@ -496,7 +496,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.paren_dlm):
             return Token("matches", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     def s71(self):  # me
         self.advance()
@@ -512,7 +512,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.paren_dlm):
             return Token("menu", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     # --- 'n' ---
     def s75(self):  # n
@@ -535,7 +535,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.term_dlm):
             return Token("next", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     def s80(self):  # no
         self.advance()
@@ -546,7 +546,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.paren_dlm):
             return Token("not", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     # --- 'o' ---
     def s83(self):  # o
@@ -559,14 +559,14 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.whitespace_dlm):
             return Token("of", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     def s86(self):  # or (Accepting State 87)
         self.advance()
         if self.current == "d": return self.s88()
         if self._match_delimiter(self.paren_dlm):
             return Token("or", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     def s88(self):  # ord
         self.advance()
@@ -582,7 +582,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.paren_dlm):
             return Token("order", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     # --- 'p' ---
     def s92(self):  # p
@@ -607,7 +607,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.paren_dlm):
             return Token("pass", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     def s97(self):  # pi
         self.advance()
@@ -628,7 +628,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.dtype_dlm):
             return Token("piece", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     def s102(self):  # po
         self.advance()
@@ -639,7 +639,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.paren_dlm):
             return Token("pow", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     def s105(self):  # pr
         self.advance()
@@ -670,7 +670,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.whitespace_dlm):
             return Token("prepare", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     # --- 'r' ---
     def s112(self):  # r
@@ -693,7 +693,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.paren_dlm):
             return Token("rand", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     def s117(self):  # re
         self.advance()
@@ -721,7 +721,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.paren_dlm):
             return Token("remove", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     def s123(self):  # rep
         self.advance()
@@ -742,7 +742,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.paren_dlm):
             return Token("repeat", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     def s128(self):  # rev
         self.advance()
@@ -768,7 +768,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.paren_dlm):
             return Token("reverse", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     # --- 's' ---
     def s134(self):  # s
@@ -805,7 +805,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.paren_dlm):
             return Token("search", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     def s141(self):  # ser
         self.advance()
@@ -821,7 +821,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.whitespace_dlm):
             return Token("serve", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     def s145(self):  # si
         self.advance()
@@ -833,7 +833,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.dtype_dlm):
             return Token("sip", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     def s148(self):  # siz
         self.advance()
@@ -844,7 +844,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.paren_dlm):
             return Token("size", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     def s151(self):  # so
         self.advance()
@@ -860,7 +860,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.paren_dlm):
             return Token("sort", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     def s155(self):  # sq
         self.advance()
@@ -876,7 +876,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.paren_dlm):
             return Token("sqrt", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     def s159(self):  # st
         self.advance()
@@ -898,7 +898,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.paren_dlm):
             return Token("start", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     def s164(self):  # sto
         self.advance()
@@ -909,7 +909,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.term_dlm):
             return Token("stop", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     # --- 't' ---
     def s167(self):  # t
@@ -938,7 +938,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.whitespace_dlm):
             return Token("table", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     def s173(self):  # tak
         self.advance()
@@ -949,7 +949,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.paren_dlm):
             return Token("take", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     def s176(self):  # to
         self.advance()
@@ -982,7 +982,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.paren_dlm):
             return Token("tochars", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     def s183(self):  # top
         self.advance()
@@ -1008,7 +1008,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.paren_dlm):
             return Token("topiece", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     def s189(self):  # tos
         self.advance()
@@ -1024,7 +1024,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.paren_dlm):
             return Token("tosip", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     # --- 'u' ---
     def s193(self):  # u
@@ -1037,7 +1037,7 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.flag_dlm):
             return Token("flag_lit", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     def s196(self):  # us
         self.advance()
@@ -1058,10 +1058,10 @@ class Lexer:
         self.advance()
         if self._match_delimiter(self.colon_dlm):
             return Token("usual", self.get_lexeme(), self.start_line, self.start_col)
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return None
 
     # ---------------------------------
-    # [cite_start]SYMBOL STATES (s201 - s232) [cite: 11]
+    # SYMBOL STATES (s201 - s232)
     # ---------------------------------
 
     def s201(self):  # + (Accepting State 202)
@@ -1169,7 +1169,7 @@ class Lexer:
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
     # ---------------------------------
-    # [cite_start]IDENTIFIER STATES (s248 - s297) [cite: 7, 13, 14]
+    # IDENTIFIER STATES (s248 - s297)
     # ---------------------------------
 
     def s248(self, count=1):  # The start of an identifier (alpha or _)
@@ -1178,16 +1178,13 @@ class Lexer:
         if count < 25 and self.current is not None and self.current in self.ID_BODY:
             return self.s248(count + 1)
 
-        # Reached max length (25) or a non-ID_BODY char
         if self._match_delimiter(self.id_delim):
             return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
-        # If it's a non-delimiter, and not a body character, it's an Invalid Lexeme.
-        self.advance()  # Consume the invalid character
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
     # ---------------------------------
-    # [cite_start]NUMBER STATES (s298 - s344) [cite: 7, 15, 16, 17]
+    # NUMBER STATES (s298 - s344)
     # ---------------------------------
 
     def s_num_start(self):
@@ -1238,7 +1235,7 @@ class Lexer:
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
     # ---------------------------------
-    # [cite_start]STRING/COMMENT STATES (s345 - s353) [cite: 7, 17]
+    # STRING/COMMENT STATES (s345 - s353)
     # ---------------------------------
 
     def s345(self):  # Inside string after initial '"'
@@ -1278,7 +1275,7 @@ class Lexer:
             self.advance()
             return self.s349()
 
-        return Token("Invalid Lexeme", self.get_lexeme(), self.start_line, self.start_col)
+        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
 
     def s349(self):
