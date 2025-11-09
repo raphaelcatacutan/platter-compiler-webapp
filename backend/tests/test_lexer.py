@@ -1,7 +1,7 @@
 
 from pprint import pprint
 
-from app.core.lexer import Lexer
+from app.lexer.lexer import Lexer
 
 includeWhitespace = False
 with open("./tests/sample_programs/lexer_2.platter", "r", encoding="utf-8") as f:

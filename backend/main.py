@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from app.core.lexer import Lexer
+from app.lexer.lexer import Lexer
 
 app = FastAPI()
 
