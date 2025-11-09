@@ -1270,17 +1270,23 @@ class Lexer:
         return self.s345()  # Back to the main string state
 
     def s348(self):  # After initial '#'
-        if self.current is None:  # EOF
-            return Token("comment_single", self.get_lexeme(), self.start_line, self.start_col)
-
         if self.current == '#':  # Start of multi-line comment (##)
             self.advance()  # Consume second '#'
             return self.s351()  # State 351 (Inside multiline comment)
 
-        # --- Single-line comment ---
-        # State 349: Loop on ascii_2
+        if self.current == ' ':
+            self.advance()
+            return self.s349()
+
+        return Token("Invalid Lexeme", self.get_lexeme(), self.start_line, self.start_col)
+
+
+    def s349(self):
         while self.current is not None and self.current != '\n':
             self.advance()
+
+        if self.current is None:  # EOF
+            return Token("comment_single", self.get_lexeme(), self.start_line, self.start_col)
 
         # State 350 (Accepting)
         if self.current == '\n':
@@ -1311,10 +1317,6 @@ class Lexer:
         # Not a '##', go back to general consumption
         return self.s351()
 
-    # ---------------------------------
-    # MAIN TOKENIZER LOOP
-    # ---------------------------------
-
     def tokenize(self):
         """Returns a list of all tokens from the input text."""
         tokens = []
@@ -1323,68 +1325,5 @@ class Lexer:
             if tok:
                 tokens.append(tok)
             else:
-                # This should only happen if s0 returns None (end of file)
                 break
         return tokens
-
-
-# ----------------------------------------------------------
-# AUTOMATED TEST SUITE
-# ----------------------------------------------------------
-if __name__ == "__main__":
-
-    def run_test(name, code):
-        print("-" * 50)
-        print(f"TEST: {name}")
-        print("CODE:")
-        print(f'"""\n{code}\n"""')
-        print("\nTOKENS:")
-        lexer = Lexer(code)
-        tokens = lexer.tokenize()
-        for t in tokens:
-            print(t)
-        print("-" * 50)
-
-
-    # 1. Reserved Words and Backtracking
-    run_test("Reserved Words & ID", "alt and alex")
-
-    # 2. User's Invalid Lexeme Example
-    run_test("Invalid Lexeme (alt^)", "alt^")
-
-    # 3. Data Types and Punctuation
-    run_test("Data Types & Punctuation", "chars[5];\nsip my_sip = -10.5;")
-
-    # 4. Symbols
-    run_test("Symbols", "+ - * / % > < >= <= == != = += -= *= /= %=")
-
-    # 5. Numbers (Valid)
-    run_test("Numbers (Valid)", "123456789012345 0.1234567 -99")
-
-    # 6. Numbers (Invalid)
-    run_test("Numbers (Invalid)",
-             "1234567890123456 (too long whole)\n"
-             "0.12345678 (too long decimal)\n"
-             "10. (missing decimal digit)\n"
-             "- (solo minus)")  # 'solo minus' is now handled as a symbol
-
-    # 7. Identifiers (Valid and Invalid)
-    run_test("Identifiers",
-             "my_var_123\n"
-             "abcdefghijklmnopqrstuvwxy (max 25)\n"
-             "abcdefghijklmnopqrstuvwxyz (invalid 26)")
-
-    # 8. Literals (String and Comments)
-    run_test("Literals",
-             '# Single line comment\n'
-             '"Hello \\"World\\""\n'
-             '## Multi-line\ncomment ##\n'
-             'prepare')
-
-    # 9. Complex Invalid Cases
-    run_test("Complex Invalid Cases",
-             '"Unterminated string\n'
-             '## Unterminated multi-comment')
-
-    # 10. Invalid Character
-    run_test("Invalid Character", "my_var $ 10")
