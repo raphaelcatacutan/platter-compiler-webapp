@@ -2,9 +2,6 @@ from app.lexer.token import Token
 
 
 class LexerBase:
-    """
-    Base class for the Lexer with core functionality and utilities.
-    """
 
     def __init__(self, text):
         self.text = text

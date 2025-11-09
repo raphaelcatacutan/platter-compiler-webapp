@@ -3,9 +3,6 @@ from app.lexer.protocol import LexerProtocol
 
 
 class LexerOperators(LexerProtocol):
-    """
-    Mixin class containing all operator state methods.
-    """
 
     def s201(self):  # + (Accepting State 202)
         self.advance()

@@ -1,12 +1,13 @@
+from app.lexer.numericals import LexerNumericals
 from app.lexer.token import Token
 from app.lexer.base import LexerBase
 from app.lexer.keywords import LexerKeywords
 from app.lexer.operators import LexerOperators
 from app.lexer.identifiers import LexerIdentifier
-from app.lexer.literals import LexerLiterals
+from app.lexer.char_com import LexerCharCom
 
 
-class Lexer(LexerBase, LexerKeywords, LexerOperators, LexerIdentifier, LexerLiterals):
+class Lexer(LexerBase, LexerKeywords, LexerOperators, LexerIdentifier, LexerCharCom, LexerNumericals):
     """
     A Lexical Analyzer that tokenizes input character by character
     using a state machine based on the provided transition diagram.

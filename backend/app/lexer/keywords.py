@@ -3,9 +3,6 @@ from app.lexer.protocol import LexerProtocol
 
 
 class LexerKeywords(LexerProtocol):
-    """
-    Mixin class containing all keyword/reserved word state methods.
-    """
 
     # --- 'a' ---
     def s1(self):

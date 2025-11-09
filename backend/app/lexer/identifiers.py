@@ -3,9 +3,6 @@ from app.lexer.protocol import LexerProtocol
 
 
 class LexerIdentifier(LexerProtocol):
-    """
-    Mixin class containing identifier state methods.
-    """
 
     def s248(self, count=1):  # The start of an identifier (alpha or _)
         self.advance()

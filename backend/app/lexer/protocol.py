@@ -3,10 +3,7 @@ from app.lexer.token import Token
 
 
 class LexerProtocol(Protocol):
-    """
-    Protocol defining the interface that all lexer mixins can use.
-    This provides type hints for inherited attributes and methods.
-    """
+
     # Position tracking
     text: str
     pos: int
