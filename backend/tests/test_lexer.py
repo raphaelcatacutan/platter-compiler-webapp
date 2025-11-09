@@ -1,5 +1,7 @@
 
 from pprint import pprint
+import os
+print(os.getcwd())
 
 from app.lexer.lexer import Lexer
 

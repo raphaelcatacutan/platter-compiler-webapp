@@ -100,9 +100,9 @@ class Lexer(LexerBase, LexerKeywords, LexerOperators, LexerIdentifier, LexerChar
                 return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
             return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
-        if self.current == " ": self.advance(); return Token("space", " ", self.start_line, self.start_col)
-        if self.current == "\t": self.advance(); return Token("tab", "\\t", self.start_line, self.start_col)
-        if self.current == "\n": self.advance(); return Token("newline", "\\n", self.start_line, self.start_col)
+        if self.current == " ": self.advance(); return Token("space", "space", self.start_line, self.start_col)
+        if self.current == "\t": self.advance(); return Token("tab", "tab", self.start_line, self.start_col)
+        if self.current == "\n": self.advance(); return Token("newline", "newline", self.start_line, self.start_col)
         if self.current == ":": self.advance(); return Token(":", ":", self.start_line, self.start_col)
         if self.current == "{": self.advance(); return Token("{", "{", self.start_line, self.start_col)
         if self.current == "}": self.advance(); return Token("}", "}", self.start_line, self.start_col)
