@@ -6,7 +6,7 @@ class LexerCharCom(LexerProtocol):
 
     def s345(self):  # Inside string after initial '"'
         if self.current is None:
-            return Token("UNKNOWN", self.get_lexeme(), self.start_line, self.start_col)
+            return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
         if self.current == '"':  # State 347
             self.advance()  # Consume closing '"'
@@ -18,14 +18,14 @@ class LexerCharCom(LexerProtocol):
 
         # Regular character (ascii_1 loop)
         if self.current == '\n':
-            return Token("UNKNOWN", self.get_lexeme(), self.start_line, self.start_col)
+            return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
         self.advance()
         return self.s345()
 
     def s346(self):  # After '\' (Expects any ascii character)
         if self.current is None:
-            return Token("UNKNOWN", self.get_lexeme(), self.start_line, self.start_col)
+            return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
         # Consume the escaped character (any char is ok, incl. '"' or 'n')
         self.advance()
@@ -57,7 +57,7 @@ class LexerCharCom(LexerProtocol):
 
     def s351(self):  # Inside multi-line comment (## ... )
         if self.current is None:  # EOF
-            return Token("UNKNOWN", self.get_lexeme(), self.start_line, self.start_col)
+            return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
         if self.current == '#':
             self.advance()  # Consume first '#'
