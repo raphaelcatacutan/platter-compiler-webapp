@@ -17,7 +17,6 @@ class LexerCharCom(LexerProtocol):
             return self.s346()
 
         # Regular character (ascii_1 loop)
-        # Check for invalid characters (like newline)
         if self.current == '\n':
             return Token("UNKNOWN", self.get_lexeme(), self.start_line, self.start_col)
 
@@ -69,7 +68,7 @@ class LexerCharCom(LexerProtocol):
 
     def s352(self):  # After first '#' inside multi-line comment (## ... #)
         if self.current is None:  # EOF
-            return Token("UNKNOWN", self.get_lexeme(), self.start_line, self.start_col)
+            return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
         if self.current == '#':
             self.advance()  # Consume second '#'

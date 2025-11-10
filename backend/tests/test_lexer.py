@@ -52,17 +52,17 @@ class TestPlatterLexerStrings(unittest.TestCase):
         },
         {
             "code": 'copy = piece_lit;',
-            "expected_types": ["copy", "=", "id"],
+            "expected_types": ["copy", "=", "id", ";"],
         },
         {
             "code": 'a = b ** c;',
-            "expected_types": ["a", "=", "b", "Invalid Lexeme", "Invalid Character", "c", ";"],
+            "expected_types": ["id", "=", "id", "Invalid Lexeme", "Invalid Character", "id", ";"],
         },
         {
-            "code": 'm{\
-n}\
-o"\
-',
+            "code": """m{
+n}
+o"
+""",
             "expected_types": ["Invalid Lexeme", "Invalid Character", "Invalid Lexeme", "Invalid Character","Invalid Lexeme", "Invalid Character"],
         },
         {
@@ -77,7 +77,7 @@ o"\
                 lexer = Lexer(case["code"])
                 tokens = [t for t in lexer.tokenize() if t.type not in ("comment", "space", "newline", "tab")]
                 actual_types = [t.type for t in tokens]
-                self.assertEqual(actual_types, case["expected_types"])
+                self.assertEqual(actual_types, case["expected_types"], msg=f"\nFAILED ON CODE:\n----------\n{case['code']}\n----------")
 
 
 if __name__ == "__main__":
