@@ -3,7 +3,7 @@ import os
 from pprint import pformat
 from app.lexer.lexer import Lexer
 
-SAMPLES_DIR = "./tests/sample_programs/"
+SAMPLES_DIR = "./tests/lexer_programs/"
 
 class TestPlatterLexerStrings(unittest.TestCase):
 
@@ -34,6 +34,7 @@ class TestPlatterLexerStrings(unittest.TestCase):
             "expected_types": ["piece", "of", "id", "=", "piece_lit", ";"],
         },
         {
+            #14, 1
             "code": 'piece;',
             "expected_types": ["Invalid Lexeme", "Invalid Character"],
         },
@@ -48,6 +49,25 @@ class TestPlatterLexerStrings(unittest.TestCase):
         {
             "code": '12',
             "expected_types": ["piece_lit"],
+        },
+        {
+            "code": 'copy = piece_lit;',
+            "expected_types": ["copy", "=", "id"],
+        },
+        {
+            "code": 'a = b ** c;',
+            "expected_types": ["a", "=", "b", "Invalid Lexeme", "Invalid Character", "c", ";"],
+        },
+        {
+            "code": 'm{\
+n}\
+o"\
+',
+            "expected_types": ["Invalid Lexeme", "Invalid Character", "Invalid Lexeme", "Invalid Character","Invalid Lexeme", "Invalid Character"],
+        },
+        {
+            "code": 'B# ',
+            "expected_types": ["id", "comment_single"],
         },
     ]
 
