@@ -30,13 +30,12 @@ class TestPlatterLexerStrings(unittest.TestCase):
 
     string_tests = [
         {
-            "code": 'piece of x = 5;',
-            "expected_types": ["piece", "of", "id", "=", "piece_lit", ";"],
-        },
-        {
-            #14, 1
             "code": 'piece;',
             "expected_types": ["Invalid Lexeme", "Invalid Character"],
+        },
+        {
+            "code": 'piece of x = 5;',
+            "expected_types": ["piece", "of", "id", "=", "piece_lit", ";"],
         },
         {
             "code": 'piece&',
@@ -57,6 +56,10 @@ class TestPlatterLexerStrings(unittest.TestCase):
         {
             "code": 'a = b ** c;',
             "expected_types": ["id", "=", "id", "Invalid Lexeme", "Invalid Character", "id", ";"],
+        },
+        {
+            "code": '#notacomment;',
+            "expected_types": ["Invalid Lexeme", "Invalid Character", "id", ";"],
         },
         {
             "code": """m{

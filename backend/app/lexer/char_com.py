@@ -40,7 +40,7 @@ class LexerCharCom(LexerProtocol):
             self.advance()
             return self.s349()
 
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
 
     def s349(self):
         while self.current is not None and self.current != '\n':
