@@ -5,7 +5,7 @@ on:
     branches:
       - '**'
 jobs:
-  Lexical Test:
+  Lexical-Test:
     runs-on: ubuntu-latest
 
     steps:
