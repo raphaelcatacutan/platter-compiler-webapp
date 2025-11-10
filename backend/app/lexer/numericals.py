@@ -23,6 +23,7 @@ class LexerNumericals(LexerProtocol):
                 self.advance()  # Consume the 16th+ digit
                 return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
             self.advance()
+            if self.current is None: break
             whole_digits += 1
 
         # Check for decimal part

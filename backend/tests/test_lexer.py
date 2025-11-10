@@ -36,7 +36,19 @@ class TestPlatterLexerStrings(unittest.TestCase):
         {
             "code": 'piece;',
             "expected_types": ["Invalid Lexeme", "Invalid Character"],
-        }
+        },
+        {
+            "code": 'piece&',
+            "expected_types": ["Invalid Lexeme", "Invalid Character"],
+        },
+        {
+            "code": 'piece_',
+            "expected_types": ["id"],
+        },
+        {
+            "code": '12',
+            "expected_types": ["piece_lit"],
+        },
     ]
 
     def test_strings(self):
