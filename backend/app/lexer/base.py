@@ -23,6 +23,15 @@ class LexerBase:
         self.DIGIT = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
         self.NUMERIC = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
+        # Keywords
+        self.KEYWORDS = [
+            "alt", "and", "append", "bill", "chars", "check", "choice", "copy", "cut",
+            "fact", "flag", "instead", "matches", "menu", "next", "not", "of", "or",
+            "order", "pass", "piece", "pow", "prepare", "rand", "remove", "repeat",
+            "reverse", "search", "serve", "sip", "size", "sort", "sqrt", "start",
+            "stop", "table", "take", "tochars", "topiece", "tosip", "usual"
+        ]
+
         self.id_delim = [' ', '\t', '\n', '(', ')', '[', ']', ';', '=', '+', '-', '*', '/', '%', '!', '<', '>', ',',
                          ':', '#']
         self.num_delim = [' ', '\t', '\n', '(', ')', '[', ']', ',', ';', '=', '+', '-', '*', '/', '%', '!', '<', '>',

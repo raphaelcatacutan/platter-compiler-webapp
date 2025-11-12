@@ -140,7 +140,7 @@ class LexerNumericals(LexerProtocol):
             # Consume all remaining digits recursively then return invalid
             return self._consume_invalid_numerical()
         if self.current == ".": return self.s303()
-        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
+        return [Token(Token.ExceedsLimit, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
 
     # --- Decimal Digits (s331 to s343) ---
 
@@ -202,4 +202,4 @@ class LexerNumericals(LexerProtocol):
         if self.current is not None and self.current in self.NUMERIC or self.current == ".":
             return self._consume_invalid_numerical()
         # Once we hit a non-digit/non-decimal, return invalid lexeme
-        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        return Token(Token.ExceedsLimit, self.get_lexeme(), self.start_line, self.start_col)

@@ -20,6 +20,9 @@ class LexerProtocol(Protocol):
     NUMERIC: list[str]
     DIGIT: list[str]
     
+    # Keywords
+    KEYWORDS: list[str]
+    
     # Delimiters
     id_delim: list[str]
     num_delim: list[str]

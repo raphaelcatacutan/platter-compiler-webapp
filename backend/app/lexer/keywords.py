@@ -3,6 +3,15 @@ from app.lexer.protocol import LexerProtocol
 
 
 class LexerKeywords(LexerProtocol):
+    
+    # All keywords in the Platter language
+    KEYWORDS = [
+        "alt", "and", "append", "bill", "chars", "check", "choice", "copy", "cut",
+        "fact", "flag", "instead", "matches", "menu", "next", "not", "of", "or",
+        "order", "pass", "piece", "pow", "prepare", "rand", "remove", "repeat",
+        "reverse", "search", "serve", "sip", "size", "sort", "sqrt", "start",
+        "stop", "table", "take", "tochars", "topiece", "tosip", "usual"
+    ]
 
     # --- 'a' ---
     def s1(self):
