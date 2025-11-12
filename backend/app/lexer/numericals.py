@@ -203,7 +203,7 @@ class LexerNumericals(LexerProtocol):
         """Recursively consume all remaining digits and decimal points, then return InvalidLexeme."""
         self.advance()
         # Continue consuming digits or decimal points
-        if self.current in self.DIGITS or self.current == ".":
+        if self.current is not None and self.current in self.DIGITS or self.current == ".":
             return self._consume_invalid_numerical()
         # Once we hit a non-digit/non-decimal, return invalid lexeme
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)

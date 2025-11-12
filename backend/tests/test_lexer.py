@@ -78,7 +78,7 @@ o"
             "expected_types": ["piece_lit", "*", "piece_lit"],
         },
         {
-            "code": 'long_id_long_id_long_id_long_id_long_id;',
+            "code": 'long_id_long_id_long_id_long_id_long_id',
             "expected_types": [Token.InvalidLexeme],
         },
         {
