@@ -93,6 +93,10 @@ o"
             "code": '12345678912345.1234567',
             "expected_types": ["sip_lit"],
         },
+        {
+            "code": '213123dasdsd',
+            "expected_types": ["piece_lit"],
+        },
     ]
 
     def test_strings(self):

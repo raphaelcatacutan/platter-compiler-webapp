@@ -13,23 +13,38 @@ class LexerBase:
         self.start_line = 1
         self.current = self.text[self.pos] if self.text else None
 
-        self.ID_START = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"
-        self.ID_BODY = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789"
-        self.DIGITS = "0123456789"
+        self.ID_START = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
+                         't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
+                         'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '_']
+        self.ID_BODY = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
+                        't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
+                        'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '_', '0', '1', '2', '3',
+                        '4', '5', '6', '7', '8', '9']
+        self.DIGITS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
-        self.id_delim = " \t\n()[];=+-*/%!<>,:"
-        self.num_delim = " \t\n()[],;=+-*/%!<>,:"
-        self.op1_dlm = " \t\n" + self.ID_BODY + "(_\""
-        self.op2_dlm = " \t\n" + "abcdefghijklmnopqrstuvwxyz(_\""
-        self.equal_dlm = " \t\n" + self.ID_BODY + "([_\""
+        self.id_delim = [' ', '\t', '\n', '(', ')', '[', ']', ';', '=', '+', '-', '*', '/', '%', '!', '<', '>', ',',
+                         ':', '#']
+        self.num_delim = [' ', '\t', '\n', '(', ')', '[', ']', ',', ';', '=', '+', '-', '*', '/', '%', '!', '<', '>',
+                          ',', ':']
 
-        self.paren_dlm = " \n\t("
-        self.dtype_dlm = " \n\t["
-        self.curly_dlm = " \n\t{"
-        self.term_dlm = " \n\t;"
-        self.flag_dlm = " \n\t()[];=!\""
-        self.whitespace_dlm = " \n\t"
-        self.colon_dlm = " \n\t:"
+        self.op1_dlm = [' ', '\t', '\n', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
+                        'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I',
+                        'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '_', '0',
+                        '1', '2', '3', '4', '5', '6', '7', '8', '9', '(', '_', '"']
+        self.op2_dlm = [' ', '\t', '\n', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
+                        'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '(', '_', '"']
+        self.equal_dlm = [' ', '\t', '\n', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
+                          'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
+                          'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '_',
+                          '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '(', '[', '_', '"']
+
+        self.paren_dlm = [' ', '\n', '\t', '(']
+        self.dtype_dlm = [' ', '\n', '\t', '[']
+        self.curly_dlm = [' ', '\n', '\t', '{']
+        self.term_dlm = [' ', '\n', '\t', ';']
+        self.flag_dlm = [' ', '\n', '\t', '(', ')', '[', ']', ';', '=', '!', '"']
+        self.whitespace_dlm = [' ', '\n', '\t']
+        self.colon_dlm = [' ', '\n', '\t', ':']
 
     def advance(self):
         """Moves to the next character, updating line and column."""

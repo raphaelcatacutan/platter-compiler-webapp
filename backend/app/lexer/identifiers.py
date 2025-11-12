@@ -3,15 +3,6 @@ from app.lexer.protocol import LexerProtocol
 
 
 class LexerIdentifier(LexerProtocol):
-
-    def s_id_start(self):
-        """
-        Entry state (s0). Consumes the first character (alpha or _)
-        and transitions to the first identifier state s248.
-        """
-        self.advance()  # Consume the 1st character
-        return self.s248()
-
     def s248(self):  # After 1 char
         if self.current is not None and self.current in self.ID_BODY:
             self.advance()
