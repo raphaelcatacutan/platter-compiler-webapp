@@ -212,4 +212,6 @@ class LexerIdentifier(LexerProtocol):
 
         # If we are here, it's either an invalid delimiter OR
         # another ID_BODY char (making it 26+). Both are invalid.
-        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
+        while self.current in self.ID_BODY:
+            self.advance()
+        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)]

@@ -141,8 +141,8 @@ class LexerNumericals(LexerProtocol):
         if self._match_delimiter(self.num_delim): return Token("piece_lit", self.get_lexeme(), self.start_line,
                                                                self.start_col)
         if self.current in self.DIGITS:
-            self.advance()  # Consume the invalid extra digit
-            return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+            # Consume all remaining digits recursively then return invalid
+            return self._consume_invalid_numerical()
         if self.current == ".": return self.s303()
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
@@ -194,8 +194,16 @@ class LexerNumericals(LexerProtocol):
         self.advance()
         if self._match_delimiter(self.num_delim): return Token("sip_lit", self.get_lexeme(), self.start_line,
                                                                self.start_col)
-        # If 8th decimal digit appears, it's invalid
+        # If 8th decimal digit appears, it's invalid - consume all remaining digits
         if self.current in self.DIGITS:
-            self.advance()
-            return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+            return self._consume_invalid_numerical()
+        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+
+    def _consume_invalid_numerical(self):
+        """Recursively consume all remaining digits and decimal points, then return InvalidLexeme."""
+        self.advance()
+        # Continue consuming digits or decimal points
+        if self.current in self.DIGITS or self.current == ".":
+            return self._consume_invalid_numerical()
+        # Once we hit a non-digit/non-decimal, return invalid lexeme
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)

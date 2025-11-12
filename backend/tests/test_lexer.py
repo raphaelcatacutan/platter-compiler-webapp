@@ -2,6 +2,7 @@ import unittest
 import os
 from pprint import pformat
 from app.lexer.lexer import Lexer
+from app.lexer.token import Token
 
 SAMPLES_DIR = "./tests/lexer_programs/"
 
@@ -71,6 +72,26 @@ o"
         {
             "code": 'B# ',
             "expected_types": ["id", "comment_single"],
+        },
+        {
+            "code": '3*287',
+            "expected_types": ["piece_lit", "*", "piece_lit"],
+        },
+        {
+            "code": 'long_id_long_id_long_id_long_id_long_id;',
+            "expected_types": [Token.InvalidLexeme],
+        },
+        {
+            "code": '123456789123456789.1234567',
+            "expected_types": [Token.InvalidLexeme],
+        },
+        {
+            "code": '123456789123456.12345678',
+            "expected_types": [Token.InvalidLexeme],
+        },
+        {
+            "code": '12345678912345.1234567',
+            "expected_types": ["sip_lit"],
         },
     ]
 
