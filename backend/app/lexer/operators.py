@@ -154,3 +154,52 @@ class LexerOperators(LexerProtocol):
 
     def s235(self):  # != (Accepting State 235)
         return Token("!=", "!=", self.start_line, self.start_col)
+
+    # --- Symbols ---
+    def s236(self):  # space (Accepting State 236)
+        self.advance()
+        return Token("space", "space", self.start_line, self.start_col)
+
+    def s237(self):  # tab (Accepting State 237)
+        self.advance()
+        return Token("tab", "tab", self.start_line, self.start_col)
+
+    def s238(self):  # newline (Accepting State 238)
+        self.advance()
+        return Token("newline", "newline", self.start_line, self.start_col)
+
+    def s239(self):  # : (Accepting State 239)
+        self.advance()
+        return Token(":", ":", self.start_line, self.start_col)
+
+    def s240(self):  # { (Accepting State 240)
+        self.advance()
+        return Token("{", "{", self.start_line, self.start_col)
+
+    def s241(self):  # } (Accepting State 241)
+        self.advance()
+        return Token("}", "}", self.start_line, self.start_col)
+
+    def s242(self):  # ( (Accepting State 242)
+        self.advance()
+        return Token("(", "(", self.start_line, self.start_col)
+
+    def s243(self):  # ) (Accepting State 243)
+        self.advance()
+        return Token(")", ")", self.start_line, self.start_col)
+
+    def s244(self):  # [ (Accepting State 244)
+        self.advance()
+        return Token("[", "[", self.start_line, self.start_col)
+
+    def s245(self):  # ] (Accepting State 245)
+        self.advance()
+        return Token("]", "]", self.start_line, self.start_col)
+
+    def s246(self):  # , (Accepting State 246)
+        self.advance()
+        return Token(",", ",", self.start_line, self.start_col)
+
+    def s247(self):  # ; (Accepting State 247)
+        self.advance()
+        return Token(";", ";", self.start_line, self.start_col)

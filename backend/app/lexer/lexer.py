@@ -44,31 +44,24 @@ class Lexer(LexerBase, LexerKeywords, LexerOperators, LexerIdentifier, LexerChar
         if self.current == "=": return self.s229()
         if self.current == "!": return self.s233()
 
-        if self.current == " ": self.advance(); return Token("space", "space", self.start_line, self.start_col)
-        if self.current == "\t": self.advance(); return Token("tab", "tab", self.start_line, self.start_col)
-        if self.current == "\n": self.advance(); return Token("newline", "newline", self.start_line, self.start_col)
-        if self.current == ":": self.advance(); return Token(":", ":", self.start_line, self.start_col)
-        if self.current == "{": self.advance(); return Token("{", "{", self.start_line, self.start_col)
-        if self.current == "}": self.advance(); return Token("}", "}", self.start_line, self.start_col)
-        if self.current == "(": self.advance(); return Token("(", "(", self.start_line, self.start_col)
-        if self.current == ")": self.advance(); return Token(")", ")", self.start_line, self.start_col)
-        if self.current == "[": self.advance(); return Token("[", "[", self.start_line, self.start_col)
-        if self.current == "]": self.advance(); return Token("]", "]", self.start_line, self.start_col)
-        if self.current == ",": self.advance(); return Token(",", ",", self.start_line, self.start_col)
-        if self.current == ";": self.advance(); return Token(";", ";", self.start_line, self.start_col)
+        if self.current == " ": return self.s236()
+        if self.current == "\t": return self.s237()
+        if self.current == "\n": return self.s238()
+        if self.current == ":": return self.s239()
+        if self.current == "{": return self.s240()
+        if self.current == "}": return self.s241()
+        if self.current == "(": return self.s242()
+        if self.current == ")": return self.s243()
+        if self.current == "[": return self.s244()
+        if self.current == "]": return self.s245()
+        if self.current == ",": return self.s246()
+        if self.current == ";": return self.s247()
 
-        if self.current is not None and self.current in self.ID_START: return self.s248()
-
+        if self.current in self.ID_START: return self.s248()
         if self.current == "0": return self.s298()
-        if self.current is not None and self.current in self.DIGIT: return self.s301()
-
-        if self.current == '"':
-            self.advance()
-            return self.s345()
-
-        if self.current == '#':
-            self.advance()
-            return self.s348()
+        if self.current in self.DIGIT: return self.s301()
+        if self.current == '"': return self.s345()
+        if self.current == '#': return self.s348()
 
         return self._error_invalid_char()
 
@@ -77,11 +70,7 @@ class Lexer(LexerBase, LexerKeywords, LexerOperators, LexerIdentifier, LexerChar
         tokens = []
         while self.current is not None:
             tok = self.s0()
-            if tok:
-                if isinstance(tok, list):
-                    tokens.extend(tok)
-                else:
-                    tokens.append(tok)
-            else:
-                break
+            if not tok: break
+            if isinstance(tok, list): tokens.extend(tok)
+            else: tokens.append(tok)
         return tokens
