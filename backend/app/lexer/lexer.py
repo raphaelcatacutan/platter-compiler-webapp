@@ -9,45 +9,29 @@ from app.lexer.char_com import LexerCharCom
 
 class Lexer(LexerBase, LexerKeywords, LexerOperators, LexerIdentifier, LexerCharCom, LexerNumericals):
     def s0(self):
-        if self.current is None:
-            return None
+        if self.current is None: return None
 
         self.save_start()
 
         saved_state = self.save()
         tok = None
 
-        if self.current == 'a':
-            tok = self.s1()
-        elif self.current == 'b':
-            tok = self.s14()
-        elif self.current == 'c':
-            tok = self.s19()
-        elif self.current == 'd':
-            tok = self.s41()
-        elif self.current == 'f':
-            tok = self.s46()
-        elif self.current == 'i':
-            tok = self.s55()
-        elif self.current == 'm':
-            tok = self.s63()
-        elif self.current == 'n':
-            tok = self.s75()
-        elif self.current == 'o':
-            tok = self.s83()
-        elif self.current == 'p':
-            tok = self.s92()
-        elif self.current == 'r':
-            tok = self.s112()
-        elif self.current == 's':
-            tok = self.s134()
-        elif self.current == 't':
-            tok = self.s167()
-        elif self.current == 'u':
-            tok = self.s193()
+        if self.current == 'a': tok = self.s1()
+        elif self.current == 'b': tok = self.s14()
+        elif self.current == 'c': tok = self.s19()
+        elif self.current == 'd': tok = self.s41()
+        elif self.current == 'f': tok = self.s46()
+        elif self.current == 'i': tok = self.s55()
+        elif self.current == 'm': tok = self.s63()
+        elif self.current == 'n': tok = self.s75()
+        elif self.current == 'o': tok = self.s83()
+        elif self.current == 'p': tok = self.s92()
+        elif self.current == 'r': tok = self.s112()
+        elif self.current == 's': tok = self.s134()
+        elif self.current == 't': tok = self.s167()
+        elif self.current == 'u': tok = self.s193()
 
-        if tok:
-            return tok
+        if tok: return tok
         self.restore(saved_state)
 
         if self.current == "+": return self.s201()
@@ -58,7 +42,6 @@ class Lexer(LexerBase, LexerKeywords, LexerOperators, LexerIdentifier, LexerChar
         if self.current == ">": return self.s221()
         if self.current == "<": return self.s225()
         if self.current == "=": return self.s229()
-
         if self.current == "!": return self.s233()
 
         if self.current == " ": self.advance(); return Token("space", "space", self.start_line, self.start_col)
