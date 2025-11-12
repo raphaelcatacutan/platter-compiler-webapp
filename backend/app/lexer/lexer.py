@@ -8,28 +8,7 @@ from app.lexer.char_com import LexerCharCom
 
 
 class Lexer(LexerBase, LexerKeywords, LexerOperators, LexerIdentifier, LexerCharCom, LexerNumericals):
-    """
-    A Lexical Analyzer that tokenizes input character by character
-    using a state machine based on the provided transition diagram.
-
-    This class combines functionality from multiple mixins:
-    - LexerBase: Core functionality and utilities
-    - KeywordsMixin: Reserved word recognition
-    - OperatorsMixin: Operator token recognition
-    - IdentifiersMixin: Identifier token recognition
-    - LiteralsMixin: Number, string, and comment recognition
-    """
-
     def s0(self):
-        """
-        Initial state (dispatcher).
-        Tries to match tokens in order of precedence:
-        1. Reserved Words (must be tried first)
-        2. Symbols
-        3. Identifiers
-        4. Literals (Numbers, Strings, Comments)
-        5. Invalid Character
-        """
         if self.current is None:
             return None
 
@@ -73,7 +52,6 @@ class Lexer(LexerBase, LexerKeywords, LexerOperators, LexerIdentifier, LexerChar
 
         if self.current == "+": return self.s201()
         if self.current == "-": return self.s205()
-
         if self.current == "*": return self.s209()
         if self.current == "/": return self.s213()
         if self.current == "%": return self.s217()
@@ -81,14 +59,7 @@ class Lexer(LexerBase, LexerKeywords, LexerOperators, LexerIdentifier, LexerChar
         if self.current == "<": return self.s225()
         if self.current == "=": return self.s229()
 
-        if self.current == "!":
-            self.advance()
-            if self.current == "=":
-                self.advance()
-                if self._match_delimiter(self.op1_dlm):
-                    return Token("!=", "!=", self.start_line, self.start_col)
-                return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
-            return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        if self.current == "!": return self.s233()
 
         if self.current == " ": self.advance(); return Token("space", "space", self.start_line, self.start_col)
         if self.current == "\t": self.advance(); return Token("tab", "tab", self.start_line, self.start_col)

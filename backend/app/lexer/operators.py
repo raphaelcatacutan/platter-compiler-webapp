@@ -7,24 +7,30 @@ class LexerOperators(LexerProtocol):
     def s201(self):  # + (Accepting State 202)
         self.advance()
         if self.current == "=": return self.s203()
-        if self._match_delimiter(self.op1_dlm):
-            return Token("+", "+", self.start_line, self.start_col)
+        if self._match_delimiter(self.op1_dlm): return self.s202()
         return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
+
+    def s202(self):
+        return Token("+", "+", self.start_line, self.start_col)
 
     def s203(self):  # += (Accepting State 204)
         self.advance()
-        if self._match_delimiter(self.op1_dlm):
-            return Token("+=", "+=", self.start_line, self.start_col)
+        if self._match_delimiter(self.op1_dlm): return self.s204()
         return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
+
+    def s204(self):
+        return Token("+=", "+=", self.start_line, self.start_col)
 
     def s205(self):  # - (Accepting State 206)
         self.advance()
-        if self._match_delimiter(self.op2_dlm):
-            return Token("-", "-", self.start_line, self.start_col)
+        if self._match_delimiter(self.op2_dlm): return self.s206()
         if self.current == "=": return self.s207()
         if self.current == "0": return self.s298()
         if self.current in self.NUMERIC: return self.s301()
         return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
+
+    def s206(self):
+        return Token("-", "-", self.start_line, self.start_col)
 
     def s207(self):  # -= (Accepting State 208)
         self.advance()
@@ -109,3 +115,15 @@ class LexerOperators(LexerProtocol):
         if self._match_delimiter(self.op1_dlm):
             return Token("==", "==", self.start_line, self.start_col)
         return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
+
+    def s233(self):
+        self.advance()
+        if self.current == "=":
+            return self.s234()
+        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+
+    def s234(self):
+        self.advance()
+        if self._match_delimiter(self.op1_dlm):
+            return Token("!=", "!=", self.start_line, self.start_col)
+        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
