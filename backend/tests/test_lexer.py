@@ -95,7 +95,7 @@ o"
         },
         {
             "code": '213123dasdsd',
-            "expected_types": ["piece_lit"],
+            "expected_types": [Token.InvalidLexeme, Token.InvalidCharacter, "id"],
         },
         {
             "code": '0',
