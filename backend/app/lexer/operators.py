@@ -19,9 +19,11 @@ class LexerOperators(LexerProtocol):
 
     def s205(self):  # - (Accepting State 206)
         self.advance()
-        if self.current == "=": return self.s207()
         if self._match_delimiter(self.op2_dlm):
             return Token("-", "-", self.start_line, self.start_col)
+        if self.current == "=": return self.s207()
+        if self.current == "0": return self.s298()
+        if self.current in self.NUMERIC: return self.s301()
         return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
 
     def s207(self):  # -= (Accepting State 208)

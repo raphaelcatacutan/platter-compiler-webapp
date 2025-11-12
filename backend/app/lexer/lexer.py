@@ -72,17 +72,7 @@ class Lexer(LexerBase, LexerKeywords, LexerOperators, LexerIdentifier, LexerChar
         self.restore(saved_state)
 
         if self.current == "+": return self.s201()
-        if self.current == "-":
-            state_after_minus = self.save()
-            self.advance()
-            if self.current is not None and self.current in self.DIGITS:
-                self.restore(state_after_minus)
-                self.pos -= 1
-                self.current = '-'
-                return self.s_num_start()
-
-            self.restore(saved_state)
-            return self.s205()
+        if self.current == "-": return self.s205()
 
         if self.current == "*": return self.s209()
         if self.current == "/": return self.s213()
@@ -113,11 +103,10 @@ class Lexer(LexerBase, LexerKeywords, LexerOperators, LexerIdentifier, LexerChar
         if self.current == ",": self.advance(); return Token(",", ",", self.start_line, self.start_col)
         if self.current == ";": self.advance(); return Token(";", ";", self.start_line, self.start_col)
 
-        if self.current is not None and self.current in self.ID_START:
-            return self.s248()
+        if self.current is not None and self.current in self.ID_START: return self.s248()
 
-        if self.current is not None and self.current in self.DIGITS:
-            return self.s_num_start()
+        if self.current == "0": return self.s298()
+        if self.current is not None and self.current in self.DIGIT: return self.s301()
 
         if self.current == '"':
             self.advance()

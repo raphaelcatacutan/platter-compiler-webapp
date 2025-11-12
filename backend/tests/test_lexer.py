@@ -97,6 +97,10 @@ o"
             "code": '213123dasdsd',
             "expected_types": ["piece_lit"],
         },
+        {
+            "code": '0',
+            "expected_types": ["piece_lit"],
+        },
     ]
 
     def test_strings(self):
