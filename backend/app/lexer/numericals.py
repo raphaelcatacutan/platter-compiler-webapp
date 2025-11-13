@@ -8,181 +8,181 @@ class LexerNumericals(LexerProtocol):
     def s298(self):  # -
         self.advance()
         if self._match_delimiter(self.num_delim): return self.s299()
-        if self.current == ".": return self.s303()
+        if self.current == ".": return self.s302()
         return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
 
     def s299(self):
         return Token("piece_lit", self.get_lexeme(), self.start_line,
                      self.start_col)
 
-    def s301(self):  # Digit 1
+    def s300(self):  # Digit 1
         self.advance()
-        if self.current in self.numeric: return self.s304()
-        if self.current == ".": return self.s303()
-        if self._match_delimiter(self.num_delim): return self.s302()
+        if self.current in self.numeric: return self.s303()
+        if self.current == ".": return self.s302()
+        if self._match_delimiter(self.num_delim): return self.s301()
         return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
 
-    def s302(self):
+    def s301(self):
         return Token("piece_lit", self.get_lexeme(), self.start_line,
                      self.start_col)
 
-    def s303(self):  # . (Decimal point)
+    def s302(self):  # . (Decimal point)
         self.advance()
-        if self.current in self.numeric: return self._s331()
+        if self.current in self.numeric: return self.s331()
         return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
 
-    def s304(self):  # Digit 2
+    def s303(self):  # Digit 2
         self.advance()
-        if self._match_delimiter(self.num_delim): return self.s305()
-        if self.current in self.numeric: return self.s306()
-        if self.current == ".": return self.s303()
+        if self._match_delimiter(self.num_delim): return self.s304()
+        if self.current in self.numeric: return self.s305()
+        if self.current == ".": return self.s302()
         return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
 
-    def s305(self):
+    def s304(self):
         return Token("piece_lit", self.get_lexeme(), self.start_line,
                      self.start_col)
 
-    def s306(self):  # Digit 3
+    def s305(self):  # Digit 3
         self.advance()
-        if self._match_delimiter(self.num_delim): return self.s307()
-        if self.current in self.numeric: return self.s308()
-        if self.current == ".": return self.s303()
+        if self._match_delimiter(self.num_delim): return self.s306()
+        if self.current in self.numeric: return self.s307()
+        if self.current == ".": return self.s302()
         return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
 
-    def s307(self):
+    def s306(self):
         return Token("piece_lit", self.get_lexeme(), self.start_line,
                      self.start_col)
 
-    def s308(self):  # Digit 4
+    def s307(self):  # Digit 4
         self.advance()
-        if self._match_delimiter(self.num_delim): return self.s309()
-        if self.current in self.numeric: return self.s310()
-        if self.current == ".": return self.s303()
+        if self._match_delimiter(self.num_delim): return self.s308()
+        if self.current in self.numeric: return self.s309()
+        if self.current == ".": return self.s302()
         return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
 
-    def s309(self):
+    def s308(self):
         return Token("piece_lit", self.get_lexeme(), self.start_line,
                      self.start_col)
 
-    def s310(self):  # Digit 5
+    def s309(self):  # Digit 5
         self.advance()
-        if self._match_delimiter(self.num_delim): return self.s311()
-        if self.current in self.numeric: return self.s312()
-        if self.current == ".": return self.s303()
+        if self._match_delimiter(self.num_delim): return self.s310()
+        if self.current in self.numeric: return self.s311()
+        if self.current == ".": return self.s302()
         return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
 
-    def s311(self):
+    def s310(self):
         return Token("piece_lit", self.get_lexeme(), self.start_line,
                      self.start_col)
 
-    def s312(self):  # Digit 6
+    def s311(self):  # Digit 6
         self.advance()
-        if self._match_delimiter(self.num_delim): return self.s313()
-        if self.current in self.numeric: return self.s314()
-        if self.current == ".": return self.s303()
+        if self._match_delimiter(self.num_delim): return self.s312()
+        if self.current in self.numeric: return self.s313()
+        if self.current == ".": return self.s302()
         return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
 
-    def s313(self):
+    def s312(self):
         return Token("piece_lit", self.get_lexeme(), self.start_line,
                      self.start_col)
 
-    def s314(self):  # Digit 7
+    def s313(self):  # Digit 7
         self.advance()
         if self._match_delimiter(self.num_delim): return Token("piece_lit", self.get_lexeme(), self.start_line,
                                                                self.start_col)
-        if self.current in self.numeric: return self.s316()
-        if self.current == ".": return self.s303()
+        if self.current in self.numeric: return self.s315()
+        if self.current == ".": return self.s302()
         return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
 
-    def s316(self):  # Digit 8
+    def s315(self):  # Digit 8
         self.advance()
-        if self._match_delimiter(self.num_delim): return self.s317()
-        if self.current in self.numeric: return self.s318()
-        if self.current == ".": return self.s303()
+        if self._match_delimiter(self.num_delim): return self.s316()
+        if self.current in self.numeric: return self.s317()
+        if self.current == ".": return self.s302()
         return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
 
-    def s317(self):
+    def s316(self):
         return Token("piece_lit", self.get_lexeme(), self.start_line,
                      self.start_col)
 
-    def s318(self):  # Digit 9
+    def s317(self):  # Digit 9
         self.advance()
-        if self._match_delimiter(self.num_delim): return self.s319()
-        if self.current in self.numeric: return self.s320()
-        if self.current == ".": return self.s303()
+        if self._match_delimiter(self.num_delim): return self.s318()
+        if self.current in self.numeric: return self.s319()
+        if self.current == ".": return self.s302()
         return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
 
-    def s319(self):
+    def s318(self):
         return Token("piece_lit", self.get_lexeme(), self.start_line,
                      self.start_col)
 
-    def s320(self):  # Digit 10
+    def s319(self):  # Digit 10
         self.advance()
-        if self._match_delimiter(self.num_delim): return self.s321()
-        if self.current in self.numeric: return self.s322()
-        if self.current == ".": return self.s303()
+        if self._match_delimiter(self.num_delim): return self.s320()
+        if self.current in self.numeric: return self.s321()
+        if self.current == ".": return self.s302()
         return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
 
-    def s321(self):
+    def s320(self):
         return Token("piece_lit", self.get_lexeme(), self.start_line,
                      self.start_col)
 
-    def s322(self):  # Digit 11
+    def s321(self):  # Digit 11
         self.advance()
-        if self._match_delimiter(self.num_delim): return self.s323()
-        if self.current in self.numeric: return self.s324()
-        if self.current == ".": return self.s303()
+        if self._match_delimiter(self.num_delim): return self.s322()
+        if self.current in self.numeric: return self.s323()
+        if self.current == ".": return self.s302()
         return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
 
-    def s323(self):
+    def s322(self):
         return Token("piece_lit", self.get_lexeme(), self.start_line,
                      self.start_col)
 
-    def s324(self):  # Digit 12
+    def s323(self):  # Digit 12
         self.advance()
-        if self._match_delimiter(self.num_delim): return self.s325()
-        if self.current in self.numeric: return self.s326()
-        if self.current == ".": return self.s303()
+        if self._match_delimiter(self.num_delim): return self.s324()
+        if self.current in self.numeric: return self.s325()
+        if self.current == ".": return self.s302()
         return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
 
-    def s325(self):
+    def s324(self):
         return Token("piece_lit", self.get_lexeme(), self.start_line,
                      self.start_col)
 
-    def s326(self):  # Digit 13
+    def s325(self):  # Digit 13
         self.advance()
-        if self._match_delimiter(self.num_delim): return self.s327()
-        if self.current in self.numeric: return self.s328()
-        if self.current == ".": return self.s303()
+        if self._match_delimiter(self.num_delim): return self.s326()
+        if self.current in self.numeric: return self.s327()
+        if self.current == ".": return self.s302()
         return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
 
-    def s327(self):
+    def s326(self):
         return Token("piece_lit", self.get_lexeme(), self.start_line,
                      self.start_col)
 
-    def s328(self):  # Digit 14
+    def s327(self):  # Digit 14
         self.advance()
-        if self._match_delimiter(self.num_delim): return self.s329()
-        if self.current in self.numeric: return self.s330()
-        if self.current == ".": return self.s303()
+        if self._match_delimiter(self.num_delim): return self.s328()
+        if self.current in self.numeric: return self.s329()
+        if self.current == ".": return self.s302()
         return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
 
-    def s329(self):
+    def s328(self):
         return Token("piece_lit", self.get_lexeme(), self.start_line,
                      self.start_col)
 
-    def s330(self):  # Digit 15 (Max whole digits)
+    def s329(self):  # Digit 15 (Max whole digits)
         self.advance()
-        if self._match_delimiter(self.num_delim): return self.s331()
+        if self._match_delimiter(self.num_delim): return self.s330()
         if self.current in self.numeric: return self._consume_invalid_numerical()
-        if self.current == ".": return self.s303()
+        if self.current == ".": return self.s302()
         return [Token(Token.ExceedsLimit, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
 
-    def s331(self):
+    def s330(self):
         return Token("piece_lit", self.get_lexeme(), self.start_line,
                      self.start_col)
 
-    def _s331(self):  # Decimal Digit 1
+    def s331(self):  # Decimal Digit 1
         self.advance()
         if self._match_delimiter(self.num_delim): return self.s332()
         if self.current in self.numeric: return self.s333()
