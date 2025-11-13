@@ -253,7 +253,7 @@ serve piece of start() {
 						// Combine into single error message
 						combinedErrors.push({
 							icon: errorIcon,
-							text: `Error at line ${current.line} col ${current.col} - invalid lexeme <${current.value}${next.value}>`
+							text: `Error at line ${current.line} col ${current.col} - invalid lexeme: ${current.value}${next.value}`
 						});
 						i += 2; // Skip both tokens
 					} else {
