@@ -155,7 +155,7 @@ serve piece of start() {
 
 	async function analyzeLexical() {
 		activeTab = 'lexical';
-		if (!codeInput.trim()) {
+		if (!codeInput) {
 			setTerminalError('Editor is empty');
 			return;
 		}
@@ -213,13 +213,37 @@ serve piece of start() {
 			}
 
 			if (invalidTokens.length) {
-				// move invalid tokens into the terminal as individual error messages
-				termMessages = invalidTokens.map((u) => {
-					return {
-						icon: errorIcon,
-						text: `Lexical error: line ${u.line} col ${u.col} - ${u.type}: ${u.value}`
-					};
-				});
+				// Combine consecutive invalid lexeme + invalid character into single error
+				const combinedErrors: TermMsg[] = [];
+				let i = 0;
+
+				while (i < invalidTokens.length) {
+					const current = invalidTokens[i];
+					const next = invalidTokens[i + 1];
+
+					// Check if current is Invalid Identifier and next is Invalid Character on same line
+					const isInvalidIdentifier = current.type === 'Invalid Identifier';
+					const isNextInvalidChar = next && next.type === 'Invalid Character';
+					const sameLine = next && current.line === next.line;
+
+					if (isInvalidIdentifier && isNextInvalidChar && sameLine) {
+						// Combine into single error message
+						combinedErrors.push({
+							icon: errorIcon,
+							text: `Error at line ${current.line} col ${current.col} - invalid lexeme <${current.value}${next.value}>`
+						});
+						i += 2; // Skip both tokens
+					} else {
+						// Regular error message
+						combinedErrors.push({
+							icon: errorIcon,
+							text: `Error at line ${current.line} col ${current.col} - ${current.type}: ${current.value}`
+						});
+						i += 1;
+					}
+				}
+
+				termMessages = combinedErrors;
 				// also set a concise terminal summary
 				// keep lexer table OK message minimal
 				return;
