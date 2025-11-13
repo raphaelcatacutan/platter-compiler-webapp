@@ -182,8 +182,28 @@ serve piece of start() {
 
 			// update right table
 			lexerRows.length = 0;
-			for (const t of tokens) {
-				lexerRows.push({ lexeme: t.value ?? '', token: t.type });
+			// Group consecutive spaces, newlines, and tabs
+			let i = 0;
+			while (i < tokens.length) {
+				const t = tokens[i];
+				const tokenType = t.type.toLowerCase();
+
+				// Check if this is a space, newline, or tab token
+				if (tokenType === 'space' || tokenType === 'newline' || tokenType === 'tab') {
+					let count = 1;
+					// Count consecutive identical tokens
+					while (i + count < tokens.length && tokens[i + count].type.toLowerCase() === tokenType) {
+						count++;
+					}
+					// Add a single row with count if more than 1
+					const displayToken = count > 1 ? `${t.type} (${count})` : t.type;
+					lexerRows.push({ lexeme: t.value ?? '', token: displayToken });
+					i += count;
+				} else {
+					// Regular token, add as-is
+					lexerRows.push({ lexeme: t.value ?? '', token: t.type });
+					i++;
+				}
 			}
 
 			if (invalidTokens.length) {
