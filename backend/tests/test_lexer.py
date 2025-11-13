@@ -67,7 +67,7 @@ class TestPlatterLexerStrings(unittest.TestCase):
 n}
 o"
 """,
-            "expected_types": ["Invalid Lexeme", "Invalid Character", "Invalid Lexeme", "Invalid Character","Invalid Lexeme", "Invalid Character"],
+            "expected_types": [Token.InvalidLexeme, Token.InvalidCharacter, Token.InvalidLexeme, Token.InvalidCharacter, Token.InvalidLexeme, Token.InvalidCharacter],
         },
         {
             "code": 'B# ',
