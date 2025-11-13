@@ -215,13 +215,9 @@ serve piece of start() {
 			if (invalidTokens.length) {
 				// move invalid tokens into the terminal as individual error messages
 				termMessages = invalidTokens.map((u) => {
-					const isExceeds =
-						typeof u.type === 'string' && u.type.toLowerCase().startsWith('exceeds');
 					return {
 						icon: errorIcon,
-						text: isExceeds
-							? `Lexical error: line ${u.line} col ${u.col} - exceeds limit ${u.value}`
-							: `Lexical error: line ${u.line} col ${u.col} - invalid character ${u.value}`
+						text: `Lexical error: line ${u.line} col ${u.col} - ${u.type}: ${u.value}`
 					};
 				});
 				// also set a concise terminal summary
