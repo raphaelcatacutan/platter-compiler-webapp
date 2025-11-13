@@ -6,24 +6,21 @@ class LexerCharCom(LexerProtocol):
 
     def s345(self):  # Inside string after initial '"'
         self.advance()
-        if self.current is None:
-            return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+        if self.current is None: return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
-        if self.current == '"':  # State 347
-            self.advance()  # Consume closing '"'
-            return Token("chars_lit", self.get_lexeme(), self.start_line, self.start_col)
-
-        if self.current == '\\':  # Escape sequence
-            self.advance()  # Consume '\'
-            return self.s346()
-
-        # Regular character (ascii_1 loop)
+        if self.current == '"': return self.s347()
+        if self.current == '\\': return self.s346()
         if self.current == '\n':
             return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
         return self.s345()
 
+    def s347(self):
+        self.advance()  # Consume closing '"'
+        return Token("chars_lit", self.get_lexeme(), self.start_line, self.start_col)
+
     def s346(self):  # After '\' (Expects any ascii character)
+        self.advance()
         if self.current is None:
             return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 

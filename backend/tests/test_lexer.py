@@ -4,7 +4,7 @@ from pprint import pformat
 from app.lexer.lexer import Lexer
 from app.lexer.token import Token
 
-SAMPLES_DIR = "./tests/lexer_programs/"
+SAMPLES_DIR = "./lexer_programs/"
 
 class TestPlatterLexerStrings(unittest.TestCase):
 
