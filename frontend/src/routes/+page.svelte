@@ -164,13 +164,20 @@ serve piece of start() {
 			const data = (await res.json()) as { success: boolean; tokens: Token[] };
 			// receive tokens and separate unknown/error tokens into the terminal
 			const received = data.tokens ?? [];
-			// treat tokens with type starting with 'invalid' (case-insensitive) as lexical errors
+			// treat tokens with type starting with 'invalid' or 'exceeds' (case-insensitive) as lexical errors
 			const invalidTokens = received.filter(
-				(t) => typeof t.type === 'string' && t.type.toLowerCase().startsWith('invalid')
+				(t) =>
+					typeof t.type === 'string' &&
+					(t.type.toLowerCase().startsWith('invalid') || t.type.toLowerCase().startsWith('exceeds'))
 			);
-			// tokens to show in the lexer table (exclude invalids)
+			// tokens to show in the lexer table (exclude invalids and exceeds)
 			tokens = received.filter(
-				(t) => !(typeof t.type === 'string' && t.type.toLowerCase().startsWith('invalid'))
+				(t) =>
+					!(
+						typeof t.type === 'string' &&
+						(t.type.toLowerCase().startsWith('invalid') ||
+							t.type.toLowerCase().startsWith('exceeds'))
+					)
 			);
 
 			// update right table
@@ -181,10 +188,16 @@ serve piece of start() {
 
 			if (invalidTokens.length) {
 				// move invalid tokens into the terminal as individual error messages
-				termMessages = invalidTokens.map((u) => ({
-					icon: errorIcon,
-					text: `Lexical error: line ${u.line} col ${u.col} - invalid character ${u.value}`
-				}));
+				termMessages = invalidTokens.map((u) => {
+					const isExceeds =
+						typeof u.type === 'string' && u.type.toLowerCase().startsWith('exceeds');
+					return {
+						icon: errorIcon,
+						text: isExceeds
+							? `Lexical error: line ${u.line} col ${u.col} - exceeds limit ${u.value}`
+							: `Lexical error: line ${u.line} col ${u.col} - invalid character ${u.value}`
+					};
+				});
 				// also set a concise terminal summary
 				// keep lexer table OK message minimal
 				return;
