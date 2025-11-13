@@ -36,13 +36,12 @@ class LexerCharCom(LexerProtocol):
         self.advance()
         if self.current in self.ascii_2: return self.s349()
         if self.current == '\n': return self.s350()
-        if self.current is None : return self.s350()
+        if self.current is None: return self.s350()
 
         return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col),
                 self._error_invalid_char()]
 
     def s350(self):
-        self.advance()
         return Token("comment_single", self.get_lexeme(), self.start_line, self.start_col)
 
     def s351(self):
