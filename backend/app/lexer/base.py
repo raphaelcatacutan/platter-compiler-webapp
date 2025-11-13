@@ -168,4 +168,4 @@ class LexerBase:
         """Handles an InvalidCharacter from s0."""
         self.advance()
         lexeme = self.text[self.pos-1:self.pos]
-        return Token(Token.InvalidCharacter, lexeme, self.start_line, self.start_col)
+        return Token(Token.InvalidCharacter, lexeme, self.start_line, self.start_col + 1)
