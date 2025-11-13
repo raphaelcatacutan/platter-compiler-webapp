@@ -162,7 +162,7 @@ class LexerBase:
 
     def _match_delimiter(self, delimiters):
         """Checks if the current character is a valid delimiter for an accepting state."""
-        return self.current is None or self.current in delimiters
+        return self.current in delimiters
 
     def _error_invalid_char(self):
         """Handles an InvalidCharacter from s0."""
