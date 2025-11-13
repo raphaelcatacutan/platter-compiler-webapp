@@ -31,7 +31,13 @@
 	} from '$lib';
 
 	import { onMount, onDestroy } from 'svelte';
-	import { loadScript, loadCSS, readFileAsText, saveContent } from '$lib/utils/browser';
+	import {
+		loadScript,
+		loadCSS,
+		readFileAsText,
+		saveContent,
+		copyToClipboard
+	} from '$lib/utils/browser';
 
 	let theme: 'dark' | 'light' = 'dark';
 	let activeTab: 'lexical' | 'syntax' | 'semantic' = 'lexical';
@@ -237,6 +243,17 @@ serve piece of start() {
 	function toggleTheme() {
 		theme = theme === 'dark' ? 'light' : 'dark';
 	}
+
+	async function handleCopyToClipboard() {
+		const content =
+			cmInstance && typeof cmInstance.getValue === 'function' ? cmInstance.getValue() : codeInput;
+		try {
+			await copyToClipboard(content);
+			setTerminalOk('Content copied to clipboard');
+		} catch (err) {
+			setTerminalError('Failed to copy to clipboard');
+		}
+	}
 </script>
 
 <div class="ide" data-theme={theme} style={`--bg-img: url(${theme === 'dark' ? darkBg : lightBg})`}>
@@ -295,7 +312,7 @@ serve piece of start() {
 						<img class="icon" src={refresh1} alt="Light Theme Icon" />
 					{/if}</button
 				>
-				<button class="icon-btn" title="copy"
+				<button class="icon-btn" title="copy" on:click={handleCopyToClipboard}
 					>{#if theme === 'dark'}
 						<img class="icon" src={copy} alt="Dark Theme Icon" />
 					{:else}
