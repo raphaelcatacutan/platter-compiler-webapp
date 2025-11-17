@@ -32,7 +32,7 @@ class TestPlatterLexerStrings(unittest.TestCase):
     string_tests = [
         {
             "code": 'piece;',
-            "expected_types": [Token.InvalidIdentifier, "Invalid Character"],
+            "expected_types": [Token.InvalidLexeme, ";"],
         },
         {
             "code": 'piece of x = 5;',
@@ -40,7 +40,7 @@ class TestPlatterLexerStrings(unittest.TestCase):
         },
         {
             "code": 'piece&',
-            "expected_types": [Token.InvalidIdentifier, "Invalid Character"],
+            "expected_types": [Token.InvalidLexeme, "Invalid Character"],
         },
         {
             "code": 'piece_',

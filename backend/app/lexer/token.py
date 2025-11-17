@@ -13,3 +13,4 @@ class Token:
     InvalidCharacter = "Invalid Character"
     InvalidLexeme = "Invalid Lexeme"
     ExceedsLimit = "Exceeds Range"
+    InvalidIdentifier = "Invalid Identifier"

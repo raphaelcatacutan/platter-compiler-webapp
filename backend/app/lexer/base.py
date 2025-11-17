@@ -142,13 +142,12 @@ class LexerBase:
         self.pos += 1
         self.current = self.text[self.pos] if self.pos < len(self.text) else None
 
-    def save(self):
-        """Saves the current position, line, and column for backtracking."""
-        return (self.pos, self.line, self.col, self.current)
-
-    def restore(self, state):
+    def restore(self):
         """Restores a saved state."""
-        self.pos, self.line, self.col, self.current = state
+        self.pos = self.start_pos
+        self.line = self.start_line
+        self.col = self.start_col
+        self.current = self.text[self.pos] if self.pos < len(self.text) else None
 
     def save_start(self):
         """Saves the starting position for the current potential token."""
