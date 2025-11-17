@@ -38,8 +38,7 @@ class LexerCharCom(LexerProtocol):
         if self.current == '\n': return self.s350()
         if self.current is None: return self.s350()
 
-        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col),
-                self._error_invalid_char()]
+        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)]
 
     def s350(self):
         return Token("comment_single", self.get_lexeme(), self.start_line, self.start_col)

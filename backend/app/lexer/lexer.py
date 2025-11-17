@@ -13,59 +13,53 @@ class Lexer(LexerBase, LexerKeywords, LexerOperators, LexerIdentifier, LexerChar
 
         self.save_start()
 
-        saved_state = self.save()
-        tok = None
+        if self.current == 'a' and (tok := self.s1()): return tok
+        if self.current == 'b' and (tok := self.s14()): return tok
+        if self.current == 'c' and (tok := self.s19()): return tok
+        if self.current == 'd' and (tok := self.s41()): return tok
+        if self.current == 'f' and (tok := self.s46()): return tok
+        if self.current == 'i' and (tok := self.s55()): return tok
+        if self.current == 'm' and (tok := self.s63()): return tok
+        if self.current == 'n' and (tok := self.s75()): return tok
+        if self.current == 'o' and (tok := self.s83()): return tok
+        if self.current == 'p' and (tok := self.s92()): return tok
+        if self.current == 'r' and (tok := self.s112()): return tok
+        if self.current == 's' and (tok := self.s134()): return tok
+        if self.current == 't' and (tok := self.s167()): return tok
+        if self.current == 'u' and (tok := self.s193()): return tok
 
-        if self.current == 'a': tok = self.s1()
-        elif self.current == 'b': tok = self.s14()
-        elif self.current == 'c': tok = self.s19()
-        elif self.current == 'd': tok = self.s41()
-        elif self.current == 'f': tok = self.s46()
-        elif self.current == 'i': tok = self.s55()
-        elif self.current == 'm': tok = self.s63()
-        elif self.current == 'n': tok = self.s75()
-        elif self.current == 'o': tok = self.s83()
-        elif self.current == 'p': tok = self.s92()
-        elif self.current == 'r': tok = self.s112()
-        elif self.current == 's': tok = self.s134()
-        elif self.current == 't': tok = self.s167()
-        elif self.current == 'u': tok = self.s193()
+        if self.current == "+" and (tok := self.s201()): return tok
+        if self.current == "-" and (tok := self.s205()): return tok
+        if self.current == "*" and (tok := self.s209()): return tok
+        if self.current == "/" and (tok := self.s213()): return tok
+        if self.current == "%" and (tok := self.s217()): return tok
+        if self.current == ">" and (tok := self.s221()): return tok
+        if self.current == "<" and (tok := self.s225()): return tok
+        if self.current == "=" and (tok := self.s229()): return tok
+        if self.current == "!" and (tok := self.s233()): return tok
 
-        if tok: return tok
-        self.restore(saved_state)
+        if self.current == " " and (tok := self.s236()): return tok
+        if self.current == "\t" and (tok := self.s237()): return tok
+        if self.current == "\n" and (tok := self.s238()): return tok
+        if self.current == ":" and (tok := self.s239()): return tok
+        if self.current == "{" and (tok := self.s240()): return tok
+        if self.current == "}" and (tok := self.s241()): return tok
+        if self.current == "(" and (tok := self.s242()): return tok
+        if self.current == ")" and (tok := self.s243()): return tok
+        if self.current == "[" and (tok := self.s244()): return tok
+        if self.current == "]" and (tok := self.s245()): return tok
+        if self.current == "," and (tok := self.s246()): return tok
+        if self.current == ";" and (tok := self.s247()): return tok
 
-        if self.current == "+": return self.s201()
-        if self.current == "-": return self.s205()
-        if self.current == "*": return self.s209()
-        if self.current == "/": return self.s213()
-        if self.current == "%": return self.s217()
-        if self.current == ">": return self.s221()
-        if self.current == "<": return self.s225()
-        if self.current == "=": return self.s229()
-        if self.current == "!": return self.s233()
+        if self.current in (self.alpha + self.underscore) and (tok := self.s248()): return tok
+        if self.current == "0" and (tok := self.s298()): return tok
+        if self.current in self.digit and (tok := self.s300()): return tok
+        if self.current == '"' and (tok := self.s345()): return tok
+        if self.current == '#' and (tok := self.s348()): return tok
 
-        if self.current == " ": return self.s236()
-        if self.current == "\t": return self.s237()
-        if self.current == "\n": return self.s238()
-        if self.current == ":": return self.s239()
-        if self.current == "{": return self.s240()
-        if self.current == "}": return self.s241()
-        if self.current == "(": return self.s242()
-        if self.current == ")": return self.s243()
-        if self.current == "[": return self.s244()
-        if self.current == "]": return self.s245()
-        if self.current == ",": return self.s246()
-        if self.current == ";": return self.s247()
-
-        if self.current in (self.alpha + self.underscore): return self.s248()
-        if self.current == "0": return self.s298()
-        if self.current in self.digit: return self.s300()
-        if self.current == '"': return self.s345()
-        if self.current == '#': return self.s348()
-
+        tok = Token(Token.InvalidCharacter, self.current, self.start_line, self.start_col)
         self.advance()
-        lexeme = self.text[self.pos-1:self.pos]
-        return Token(Token.InvalidCharacter, lexeme, self.start_line, self.start_col + len(self.get_lexeme()) - 1)
+        return tok
 
     def tokenize(self):
         """Returns a list of all tokens from the input text."""
