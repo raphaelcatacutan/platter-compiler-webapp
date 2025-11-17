@@ -55,9 +55,6 @@ class LexerProtocol(Protocol):
     paren_dlm: list[str]
     term_dlm: list[str]
     
-    # Legacy delimiter (for backward compatibility)
-    whitespace_dlm: list[str]
-    
     # Methods
     def advance(self) -> None: ...
     def save(self) -> Tuple[int, int, int, Optional[str]]: ...
