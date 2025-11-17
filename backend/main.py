@@ -34,7 +34,7 @@ async def analyze_code(input_data: CodeInput):
                 break
             tokens.append({
                 "type": token.type,
-                "value": token.value or 'EOF',
+                "value": token.value or '\0',
                 "line": token.line,
                 "col": token.col
             })

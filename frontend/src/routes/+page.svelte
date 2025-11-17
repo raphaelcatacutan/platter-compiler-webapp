@@ -249,21 +249,13 @@ serve piece of start() {
 					const isNextInvalidChar = next && next.type === 'Invalid Character';
 					const sameLine = next && current.line === next.line;
 
-					if (isInvalidIdentifier && isNextInvalidChar && sameLine) {
-						// Combine into single error message
-						combinedErrors.push({
-							icon: errorIcon,
-							text: `Error at line ${current.line} col ${current.col} - invalid lexeme: ${current.value}${next.value}`
-						});
-						i += 2; // Skip both tokens
-					} else {
-						// Regular error message
-						combinedErrors.push({
-							icon: errorIcon,
-							text: `Error at line ${current.line} col ${current.col} - ${current.type}: ${current.value}`
-						});
-						i += 1;
-					}
+				
+					// Regular error message
+					combinedErrors.push({
+						icon: errorIcon,
+						text: `Error at line ${current.line} col ${current.col} - ${current.type}: ${current.value}`
+					});
+					i += 1;
 				}
 
 				termMessages = combinedErrors;

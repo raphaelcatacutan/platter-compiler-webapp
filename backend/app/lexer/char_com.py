@@ -30,7 +30,7 @@ class LexerCharCom(LexerProtocol):
         if self.current == ' ': return self.s349()
         if self.current == '#': return self.s351()
 
-        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
+        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)]
 
     def s349(self):
         self.advance()
