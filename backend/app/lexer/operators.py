@@ -8,7 +8,7 @@ class LexerOperators(LexerProtocol):
         self.advance()
         if self.current == "=": return self.s203()
         if self._match_delimiter(self.op1_dlm): return self.s202()
-        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
+        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)]
 
     def s202(self):  # + (Accepting State 202)
         return Token("+", "+", self.start_line, self.start_col)
@@ -16,7 +16,7 @@ class LexerOperators(LexerProtocol):
     def s203(self):  # +=
         self.advance()
         if self._match_delimiter(self.op1_dlm): return self.s204()
-        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
+        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)]
 
     def s204(self):  # += (Accepting State 204)
         return Token("+=", "+=", self.start_line, self.start_col)
@@ -27,7 +27,7 @@ class LexerOperators(LexerProtocol):
         if self.current == "=": return self.s207()
         if self.current == "0": return self.s298()
         if self.current in self.numeric: return self.s300()
-        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
+        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)]
 
     def s206(self):  # - (Accepting State 206)
         return Token("-", "-", self.start_line, self.start_col)
@@ -35,7 +35,7 @@ class LexerOperators(LexerProtocol):
     def s207(self):  # -=
         self.advance()
         if self._match_delimiter(self.op1_dlm): return self.s208()
-        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
+        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)]
 
     def s208(self):  # -= (Accepting State 208)
         return Token("-=", "-=", self.start_line, self.start_col)
@@ -44,7 +44,7 @@ class LexerOperators(LexerProtocol):
         self.advance()
         if self.current == "=": return self.s211()
         if self._match_delimiter(self.op1_dlm): return self.s210()
-        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
+        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)]
 
     def s210(self):  # * (Accepting State 210)
         return Token("*", "*", self.start_line, self.start_col)
@@ -52,7 +52,7 @@ class LexerOperators(LexerProtocol):
     def s211(self):  # *=
         self.advance()
         if self._match_delimiter(self.op1_dlm): return self.s212()
-        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
+        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)]
 
     def s212(self):  # *= (Accepting State 212)
         return Token("*=", "*=", self.start_line, self.start_col)
@@ -61,7 +61,7 @@ class LexerOperators(LexerProtocol):
         self.advance()
         if self.current == "=": return self.s215()
         if self._match_delimiter(self.op1_dlm): return self.s214()
-        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
+        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)]
 
     def s214(self):  # / (Accepting State 214)
         return Token("/", "/", self.start_line, self.start_col)
@@ -69,7 +69,7 @@ class LexerOperators(LexerProtocol):
     def s215(self):  # /=
         self.advance()
         if self._match_delimiter(self.op1_dlm): return self.s216()
-        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
+        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)]
 
     def s216(self):  # /= (Accepting State 216)
         return Token("/=", "/=", self.start_line, self.start_col)
@@ -78,7 +78,7 @@ class LexerOperators(LexerProtocol):
         self.advance()
         if self.current == "=": return self.s219()
         if self._match_delimiter(self.op1_dlm): return self.s218()
-        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
+        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)]
 
     def s218(self):  # % (Accepting State 218)
         return Token("%", "%", self.start_line, self.start_col)
@@ -86,7 +86,7 @@ class LexerOperators(LexerProtocol):
     def s219(self):  # %=
         self.advance()
         if self._match_delimiter(self.op1_dlm): return self.s220()
-        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
+        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)]
 
     def s220(self):  # %= (Accepting State 220)
         return Token("%=", "%=", self.start_line, self.start_col)
@@ -95,7 +95,7 @@ class LexerOperators(LexerProtocol):
         self.advance()
         if self.current == "=": return self.s223()
         if self._match_delimiter(self.op1_dlm): return self.s222()
-        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
+        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)]
 
     def s222(self):  # > (Accepting State 222)
         return Token(">", ">", self.start_line, self.start_col)
@@ -103,7 +103,7 @@ class LexerOperators(LexerProtocol):
     def s223(self):  # >=
         self.advance()
         if self._match_delimiter(self.op1_dlm): return self.s224()
-        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
+        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)]
 
     def s224(self):  # >= (Accepting State 224)
         return Token(">=", ">=", self.start_line, self.start_col)
@@ -112,7 +112,7 @@ class LexerOperators(LexerProtocol):
         self.advance()
         if self.current == "=": return self.s227()
         if self._match_delimiter(self.op1_dlm): return self.s226()
-        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
+        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)]
 
     def s226(self):  # < (Accepting State 226)
         return Token("<", "<", self.start_line, self.start_col)
@@ -120,7 +120,7 @@ class LexerOperators(LexerProtocol):
     def s227(self):  # <=
         self.advance()
         if self._match_delimiter(self.op1_dlm): return self.s228()
-        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
+        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)]
 
     def s228(self):  # <= (Accepting State 228)
         return Token("<=", "<=", self.start_line, self.start_col)
@@ -129,7 +129,7 @@ class LexerOperators(LexerProtocol):
         self.advance()
         if self.current == "=": return self.s231()
         if self._match_delimiter(self.equal_dlm): return self.s230()
-        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
+        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)]
 
     def s230(self):  # = (Accepting State 230)
         return Token("=", "=", self.start_line, self.start_col)
@@ -137,7 +137,7 @@ class LexerOperators(LexerProtocol):
     def s231(self):  # ==
         self.advance()
         if self._match_delimiter(self.op1_dlm): return self.s232()
-        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col), self._error_invalid_char()]
+        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)]
 
     def s232(self):  # == (Accepting State 232)
         return Token("==", "==", self.start_line, self.start_col)

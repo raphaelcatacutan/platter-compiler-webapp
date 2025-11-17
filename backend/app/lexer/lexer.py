@@ -63,7 +63,9 @@ class Lexer(LexerBase, LexerKeywords, LexerOperators, LexerIdentifier, LexerChar
         if self.current == '"': return self.s345()
         if self.current == '#': return self.s348()
 
-        return self._error_invalid_char()
+        self.advance()
+        lexeme = self.text[self.pos-1:self.pos]
+        return Token(Token.InvalidCharacter, lexeme, self.start_line, self.start_col + len(self.get_lexeme()) - 1)
 
     def tokenize(self):
         """Returns a list of all tokens from the input text."""
