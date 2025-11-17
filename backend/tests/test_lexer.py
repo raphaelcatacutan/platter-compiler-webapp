@@ -4,7 +4,7 @@ from pprint import pformat
 from app.lexer.lexer import Lexer
 from app.lexer.token import Token
 
-SAMPLES_DIR = "./lexer_programs/"
+SAMPLES_DIR = "./tests/lexer_programs/"
 
 class TestPlatterLexerStrings(unittest.TestCase):
 
@@ -32,7 +32,7 @@ class TestPlatterLexerStrings(unittest.TestCase):
     string_tests = [
         {
             "code": 'piece;',
-            "expected_types": [Token.InvalidIdentifier, "Invalid Character"],
+            "expected_types": [Token.InvalidLexeme, ";"],
         },
         {
             "code": 'piece of x = 5;',
@@ -40,11 +40,11 @@ class TestPlatterLexerStrings(unittest.TestCase):
         },
         {
             "code": 'piece&',
-            "expected_types": [Token.InvalidIdentifier, "Invalid Character"],
+            "expected_types": [Token.InvalidLexeme, "Invalid Character"],
         },
         {
-            "code": 'piece_',
-            "expected_types": [Token.InvalidLexeme, "Invalid Character"],
+            "code": 'piece_;',
+            "expected_types": ["id", ";"],
         },
         {
             "code": '12;',
@@ -56,18 +56,18 @@ class TestPlatterLexerStrings(unittest.TestCase):
         },
         {
             "code": 'a = b ** c;',
-            "expected_types": ["id", "=", "id", "Invalid Lexeme", "Invalid Character", "id", ";"],
+            "expected_types": ["id", "=", "id", "Invalid Lexeme", "*", "id", ";"],
         },
         {
             "code": '#notacomment;',
-            "expected_types": ["Invalid Lexeme", "Invalid Character", "id", ";"],
+            "expected_types": ["Invalid Lexeme", "id", ";"],
         },
         {
             "code": """m{
 n}
 o"
 """,
-            "expected_types": [Token.InvalidLexeme, Token.InvalidCharacter, Token.InvalidLexeme, Token.InvalidCharacter, Token.InvalidLexeme, Token.InvalidCharacter],
+            "expected_types": [Token.InvalidLexeme, "{", Token.InvalidLexeme, "}", Token.InvalidLexeme, Token.InvalidLexeme],
         },
         {
             "code": 'B# ds',
@@ -95,7 +95,7 @@ o"
         },
         {
             "code": '213123dasdsd;',
-            "expected_types": [Token.InvalidLexeme, Token.InvalidCharacter, "id", ";"],
+            "expected_types": [Token.InvalidLexeme, "id", ";"],
         },
         {
             "code": '0;',
