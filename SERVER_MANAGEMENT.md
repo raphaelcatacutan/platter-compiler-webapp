@@ -1,104 +1,147 @@
 # 🍽️ Platter Compiler Webapp - Server Management
 
-This directory contains convenient scripts to start and stop both the Python backend and Svelte frontend servers with a single command.
+This project uses a modern Node.js-based server management system that handles both the Python backend and Svelte frontend in a single terminal process.
 
-## 📁 Available Scripts
+## 🎨 Architecture Overview
 
-### PowerShell Scripts (Recommended for Windows)
-- **`start-servers.ps1`** - Starts both backend and frontend servers
-- **`stop-servers.ps1`** - Stops all running servers and cleans up processes
+- **Single Script**: `server-manager.js` - Comprehensive Node.js server manager
+- **Virtual Environment**: Automatic Python venv creation and management
+- **Unified Terminal**: Everything runs in one terminal, no multiple windows
+- **Smart Dependencies**: Auto-installs requirements.txt packages
+- **Graceful Shutdown**: Ctrl+C stops everything cleanly
 
-### Batch Scripts (Alternative for Windows)
-- **`start-servers.bat`** - Starts both servers (simpler version)
-- **`stop-servers.bat`** - Stops all servers (simpler version)
+## 📁 Available Commands
+
+### Core Commands
+```bash
+# Start both servers (default)
+node server-manager.js start
+node server-manager.js        # same as start
+
+# Stop all servers
+node server-manager.js stop
+
+# Restart all servers
+node server-manager.js restart
+
+# Setup/check virtual environment only
+node server-manager.js venv
+```
+
+### NPM Scripts (from frontend directory)
+```bash
+npm run start:dev     # Start both servers
+npm run stop:dev      # Stop all servers
+npm run restart:dev   # Restart all servers
+npm run setup:venv    # Setup virtual environment
+```
+
+### Batch Files (for double-clicking)
+- **`start-servers.bat`** - Invokes Node.js manager to start
+- **`stop-servers.bat`** - Invokes Node.js manager to stop
 
 ## 🚀 How to Use
 
-### Starting Servers
+### Starting Development
 
-**Option 1: PowerShell (Recommended)**
-```powershell
-# Right-click on start-servers.ps1 and select "Run with PowerShell"
-# OR run from PowerShell terminal:
-.\start-servers.ps1
+**Option 1: Terminal (Recommended)**
+```bash
+# From project root
+node server-manager.js start
 ```
 
-**Option 2: Batch File**
-```cmd
-# Double-click start-servers.bat
-# OR run from Command Prompt:
-start-servers.bat
+**Option 2: NPM Script**
+```bash
+# From frontend directory
+npm run start:dev
 ```
 
-### Stopping Servers
+**Option 3: Double-Click**
+- Double-click `start-servers.bat`
 
-**Option 1: PowerShell (Recommended)**
-```powershell
-# Right-click on stop-servers.ps1 and select "Run with PowerShell"
-# OR run from PowerShell terminal:
-.\stop-servers.ps1
+### Stopping Development
+
+**Option 1: Keyboard Shortcut**
+- Press `Ctrl+C` in the running terminal
+
+**Option 2: Separate Command**
+```bash
+node server-manager.js stop
 ```
 
-**Option 2: Batch File**
-```cmd
-# Double-click stop-servers.bat
-# OR run from Command Prompt:
-stop-servers.bat
-```
+**Option 3: Double-Click**
+- Double-click `stop-servers.bat`
 
-## 🎯 What the Scripts Do
+## ✨ Features
 
-### Start Scripts
-- ✅ Check if ports 8000 and 5173 are available
-- 🐍 Start Python FastAPI backend on `http://localhost:8000`
-- ⚡ Start Svelte frontend on `http://localhost:5173`
-- 🪟 Open each server in a separate terminal window
-- 🌐 Optionally open browser to the frontend
-- 📍 Display URLs for easy access
+### 🐍 Python Virtual Environment
+- **Auto-Creation**: Creates `.venv` in backend directory if missing
+- **Smart Checking**: Verifies venv completeness and required packages
+- **Auto-Install**: Installs `requirements.txt` packages automatically
+- **Isolation**: Uses venv Python instead of global installation
 
-### Stop Scripts
-- 🛑 Find and terminate processes running on ports 8000 and 5173
-- 🔪 Kill Python and Node.js processes related to the servers
-- 🪟 Close the terminal windows opened by start scripts
-- 🧹 Clean up any remaining development server processes
+### 📋 Process Management
+- **Port Checking**: Detects and handles port conflicts (8000, 5173)
+- **Clean Shutdown**: Properly terminates all spawned processes
+- **Error Handling**: Graceful error messages and recovery
+- **Cross-Platform**: Works on Windows, macOS, and Linux
+
+### 🎨 User Experience
+- **Single Terminal**: No multiple windows or complex setup
+- **Colored Output**: Easy-to-read status messages with emojis
+- **Interactive Prompts**: Asks before stopping conflicting processes
+- **URL Display**: Shows exact URLs when servers are ready
 
 ## 🔧 Requirements
 
-Before running the scripts, ensure you have:
-- Python with FastAPI and Uvicorn installed
-- Node.js with npm installed
-- All dependencies installed in both `backend/` and `frontend/` directories
+### Prerequisites
+- **Node.js** (for the server manager)
+- **Python 3.7+** (for backend)
+- **npm** (for frontend dependencies)
+
+### First Time Setup
+**Automatic (Recommended):**
+```bash
+# Just run the server manager - it handles everything!
+node server-manager.js start
+```
+
+**Manual (if needed):**
+```bash
+# Install frontend dependencies
+cd frontend && npm install
+
+# The Python venv and backend deps are handled automatically
+```
+
+## 📍 URLs
+
+After starting:
+- **Frontend UI**: http://localhost:5173
+- **Backend API**: http://localhost:8000
+- **API Docs**: http://localhost:8000/docs (FastAPI auto-docs)
 
 ## 💡 Tips
 
-1. **First Time Setup**: Make sure to install dependencies first:
-   ```bash
-   # In backend directory
-   pip install fastapi uvicorn
-   
-   # In frontend directory
-   npm install
-   ```
+1. **Virtual Environment Location**: Created at `backend/.venv/`
+2. **Requirements**: Automatically reads `backend/requirements.txt`
+3. **Port Conflicts**: Manager will ask before killing conflicting processes
+4. **Development Flow**: Start once, code all day, Ctrl+C to stop
+5. **Logs**: All output appears in the same terminal for easy debugging
 
-2. **PowerShell Execution Policy**: If you get an execution policy error, run:
-   ```powershell
-   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-   ```
+## 🔄 Migration from Old Scripts
 
-3. **Port Conflicts**: If ports are already in use, the scripts will warn you and may not start properly.
+If you were using the old PowerShell scripts:
+- **Old**: `start-servers.ps1` → **New**: `node server-manager.js start`
+- **Old**: `stop-servers.ps1` → **New**: `Ctrl+C` or `node server-manager.js stop`
+- **Benefits**: Single terminal, auto venv, better error handling
 
-4. **Manual Cleanup**: If scripts don't stop everything, you can manually kill processes:
-   ```powershell
-   # Kill by port
-   netstat -ano | findstr :8000
-   taskkill /PID <process_id> /F
-   ```
+## 🎉 One-Terminal Development
 
-## 🎉 One-Click Development
-
-With these scripts, you can now:
-- **Start**: Double-click `start-servers.ps1` → Both servers running!
-- **Stop**: Double-click `stop-servers.ps1` → Everything cleaned up!
-- **Develop**: Open `http://localhost:5173` and start coding!
+With the new system:
+1. **Start**: `node server-manager.js start`
+2. **Code**: Everything runs in one terminal with colored output
+3. **Stop**: Press `Ctrl+C` to stop everything cleanly
+4. **Develop**: Open http://localhost:5173 and start coding!
 
 Happy coding! 🚀
