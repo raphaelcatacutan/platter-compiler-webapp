@@ -183,7 +183,7 @@ class LexerKeywords(LexerProtocol):
 
     def s32(self):  # choice (Accepting State 33)
         self.advance()
-        if self._match_delimiter(self.whitespace_dlm): return self.s33()
+        if self._match_delimiter(self.whitespace): return self.s33()
         self.restore()
         return None
 
