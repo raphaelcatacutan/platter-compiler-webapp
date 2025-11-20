@@ -42,7 +42,7 @@ class TestPlatterLexerStrings(unittest.TestCase):
         },
         {
             "number": 4,
-            "code": "piece_ _piece piece of",
+            "code": "piece_ _piece piece of;",
             "expected_types": [
                 "id",
                 "id",
@@ -581,7 +581,7 @@ class TestPlatterLexerStrings(unittest.TestCase):
         },
         {
             "number": 43,
-            "code": "weird = \"q\";",
+            "code": "weird = \"\\q\";",
             "expected_types": [
                 "id", "=", "chars_lit", ";"
             ]
@@ -952,35 +952,35 @@ class TestPlatterLexerStrings(unittest.TestCase):
         },
         {
             "number": 91,
-            "code": "if i === j",
+            "code": "if i === j;",
             "expected_types": [
                 "id", "id", "Invalid Lexeme", "=", "Invalid Lexeme"
             ]
         },
         {
             "number": 92,
-            "code": "piece of 12num",
+            "code": "piece of 12num;",
             "expected_types": [
                 "piece", "of", "Invalid Lexeme", "Invalid Lexeme"
             ]
         },
         {
             "number": 93,
-            "code": "321123321123321123",
+            "code": "321123321123321123;",
             "expected_types": [
                 "Invalid Lexeme Exceeds", "Invalid Lexeme"
             ]
         },
         {
             "number": 94,
-            "code": "a--5",
+            "code": "a--5;",
             "expected_types": [
                 "id", "Invalid Lexeme", "Invalid Lexeme"
             ]
         },
         {
             "number": 95,
-            "code": "bill \"hello\"",
+            "code": "bill(\"hello\");",
             "expected_types": [
                 "bill",
                 "chars_lit"
@@ -988,7 +988,7 @@ class TestPlatterLexerStrings(unittest.TestCase):
         },
         {
             "number": 96,
-            "code": "5++",
+            "code": "5++i;",
             "expected_types": [
                 "piece_lit", "Invalid Lexeme", "Invalid Lexeme"
             ]
@@ -1023,42 +1023,42 @@ class TestPlatterLexerStrings(unittest.TestCase):
         },
         {
             "number": 101,
-            "code": "\"Missing quote",
+            "code": "\"\"\"Missing quote",
             "expected_types": [
                 "Invalid Lexeme"
             ]
         },
         {
             "number": 102,
-            "code": "x && y",
+            "code": "x && y;",
             "expected_types": [
                 "id", "Invalid Character", "Invalid Character", "Invalid Lexeme"
             ]
         },
         {
             "number": 103,
-            "code": "Hello^World",
+            "code": "Hello^World;",
             "expected_types": [
                 "Invalid Lexeme", "Invalid Character", "Invalid Lexeme"
             ]
         },
         {
             "number": 104,
-            "code": "1221 + 1.3.2",
+            "code": "1221 + 1.3.2 ;",
             "expected_types": [
                 "piece_lit", "+", "Invalid Lexeme", "Invalid Character", "Invalid Lexeme"
             ]
         },
         {
             "number": 105,
-            "code": "OneHundred + 12 -- 15",
+            "code": "OneHundred + 12 -- 15 ;",
             "expected_types": [
                 "id", "+", "piece_lit", "Invalid Lexeme", "-", "Invalid Lexeme"
             ]
         },
         {
             "number": 106,
-            "code": "\"25\"+\"25\"",
+            "code": "\"25\"+\"25\";",
             "expected_types": [
                 "chars_lit",
                 "+",
@@ -1067,14 +1067,14 @@ class TestPlatterLexerStrings(unittest.TestCase):
         },
         {
             "number": 107,
-            "code": "this_is_exactly_25_chars",
+            "code": "this_is_exactly_25_chars;",
             "expected_types": [
                 "Invalid Lexeme"
             ]
         },
         {
             "number": 108,
-            "code": "pie##comment##ce",
+            "code": "pie##comment##ce;",
             "expected_types": [
                 "id", "comment_multi", "Invalid Lexeme"
             ]
@@ -1109,147 +1109,213 @@ class TestPlatterLexerStrings(unittest.TestCase):
         },
         {
             "number": 113,
-            "code": "bill(4)",
+            "code": "bill(4);",
             "expected_types": [
                 "bill", "(", "piece_lit", ")"
             ]
         },
         {
             "number": 114,
-            "code": "add(x + piece y)",
+            "code": "add(x + piece y);",
             "expected_types": [
                 "id", "(", "id", "+", "piece", "id", ")"
             ]
         },
         {
             "number": 115,
-            "code": "xX_Goku_Xx",
+            "code": "xX_Goku_Xx;",
             "expected_types": [
                 "Invalid Lexeme"
             ]
         },
         {
             "number": 116,
-            "code": "serve food",
+            "code": "serve food;",
             "expected_types": [
                 "serve", "Invalid Lexeme"
             ]
         },
         {
             "number": 117,
-            "code": "sub((5-1)",
+            "code": "sub((5-1);",
             "expected_types": [
                 "id", "(", "(", "piece_lit", "piece_lit", ")"
             ]
         },
         {
             "number": 118,
-            "code": "25+25",
+            "code": "25+25;",
             "expected_types": [
                 "piece_lit", "+", "Invalid Lexeme"
             ]
         },
         {
             "number": 119,
-            "code": "1234512345",
+            "code": "1234512345;",
             "expected_types": [
                 "Invalid Lexeme"
             ]
         },
         {
             "number": 120,
-            "code": "12345.12345",
+            "code": "12345.12345;",
             "expected_types": [
                 "Invalid Lexeme"
             ]
         },
         {
             "number": 121,
-            "code": 'piece;',
-            "expected_types": [Token.InvalidLexemeReserved, ";"],
+            "code": "5abc = 10;",
+            "expected_types": [Token.InvalidLexeme, ";"],
         },
         {
             "number": 122,
-            "code": 'piece of x = 5;',
+            "code": "na&me = 3;",
             "expected_types": ["piece", "of", "id", "=", "piece_lit", ";"],
         },
         {
             "number": 123,
-            "code": 'piece&',
+            "code": "chars of a = \"hello;",
             "expected_types": [Token.InvalidLexeme, "Invalid Character"],
         },
         {
             "number": 124,
-            "code": 'piece_;',
+            "code": "x = \"hi\\qbye\";",
             "expected_types": ["id", ";"],
         },
         {
             "number": 125,
-            "code": '12;',
+            "code": "x = .55;",
             "expected_types": ["piece_lit", ";"],
         },
         {
             "number": 126,
-            "code": 'copy = piece_lit;',
+            "code": "x = 0123;",
             "expected_types": ["copy", "=", "id", ";"],
         },
         {
             "number": 127,
-            "code": 'a = b ** c;',
+            "code": "y = 1.23e5;",
             "expected_types": ["id", "=", "id", "Invalid Lexeme", "*", "id", ";"],
         },
         {
             "number": 128,
-            "code": '#notacomment;',
+            "code": "tricia = 10;",
             "expected_types": ["Invalid Lexeme", "id", ";"],
         },
         {
             "number": 129,
-            "code": """m{
-    n}
-    o"
-    """,
+            "code": "user#name = 10;",
             "expected_types": [Token.InvalidLexeme, "{", Token.InvalidLexeme, "}", Token.InvalidLexeme,
                                Token.InvalidLexeme],
         },
         {
             "number": 130,
-            "code": 'B# ds',
+            "code": "001value = 5;",
             "expected_types": ["id", "comment_single"],
         },
         {
             "number": 131,
-            "code": '3*287;',
+            "code": "hello world = 3;",
             "expected_types": ["piece_lit", "*", "piece_lit", ";"],
         },
         {
             "number": 132,
-            "code": 'long_id_long_id_long_id_long_id_long_id;',
+            "code": "x = \"unterminated;",
             "expected_types": [Token.InvalidLexemeExceeds, "id", ";"],
         },
         {
             "number": 133,
-            "code": '123456789123456789.1234567;',
+            "code": "var = \"hello\\pworld\";",
             "expected_types": [Token.InvalidLexemeExceeds, "sip_lit", ";"],
         },
         {
             "number": 134,
-            "code": '123456789123456.12345678;',
+            "code": "data[] of x = [1,,2];",
             "expected_types": [Token.InvalidLexemeExceeds, "piece_lit", ";"],
         },
         {
             "number": 135,
-            "code": '12345678912345.1234567;',
+            "code": "sample = 1.2.3;",
             "expected_types": ["sip_lit", ";"],
         },
         {
             "number": 136,
-            "code": '213123dasdsd;',
+            "code": "login()#comment;",
             "expected_types": [Token.InvalidLexeme, "id", ";"],
         },
         {
             "number": 137,
-            "code": '0;',
+            "code": "copy = piece_lit;",
+            "expected_types": ["piece_lit", ";"],
+        },
+        {
+            "number": 138,
+            "code": "a = b ** c;",
+            "expected_types": ["id", "=", "id", "Invalid Lexeme", "*", "id", ";"],
+        },
+        {
+            "number": 139,
+            "code": "#notacomment;",
+            "expected_types": ["Invalid Lexeme", "id", ";"],
+        },
+        {
+            "number": 140,
+            "code": """m{ 
+n}
+o\"""",
+            "expected_types": [Token.InvalidLexeme, "{", Token.InvalidLexeme, "}", Token.InvalidLexeme, Token.InvalidLexeme],
+        },
+        {
+            "number": 141,
+            "code": "B#",
+            "expected_types": ["id", "comment_single"],
+        },
+        {
+            "number": 142,
+            "code": "kjadhajksdhadkashdjaksdhakjdhasjkdhaskjdhasdaskdahdkjasdhak;",
+            "expected_types": [Token.InvalidLexemeExceeds, "id", ";"],
+        },
+        {
+            "number": 143,
+            "code": """# awda
+## adwa ##
+# asd""",
+            "expected_types": ["comment_single", "comment_multi", "comment_single"],
+        },
+        {
+            "number": 144,
+            "code": "chars #comment## of a = a;",
+            "expected_types": ["chars", "comment_multi", "of", "id", "=", "id", ";"],
+        },
+        {
+            "number": 145,
+            "code": "piece of & = a;",
+            "expected_types": ["piece", "of", "Invalid Character", "=", "id", ";"],
+        },
+        {
+            "number": 146,
+            "code": "piece():1;",
+            "expected_types": [Token.InvalidLexemeReserved, "(", ")", ":", "piece_lit", ";"],
+        },
+        {
+            "number": 147,
+            "code": "piece of x = 5;",
+            "expected_types": ["piece", "of", "id", "=", "piece_lit", ";"],
+        },
+        {
+            "number": 148,
+            "code": "piece&",
+            "expected_types": [Token.InvalidLexemeReserved, "Invalid Character"],
+        },
+        {
+            "number": 149,
+            "code": "piece_;",
+            "expected_types": ["id", ";"],
+        },
+        {
+            "number": 150,
+            "code": "12;",
             "expected_types": ["piece_lit", ";"],
         },
     ]
