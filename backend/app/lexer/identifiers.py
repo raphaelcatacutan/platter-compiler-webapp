@@ -4,208 +4,251 @@ from app.lexer.protocol import LexerProtocol
 
 class LexerIdentifier(LexerProtocol):
     def s248(self):
+        self.advance()
+        if self._match_delimiter(self.id_delim): return self.s249()
         if self.current in self.id_chars: return self.s250()
-        return self.s249()
-    
-    def s249(self):
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidIdentifier, self.get_lexeme(), self.start_line, self.start_col)
-        if self._match_delimiter(self.id_delim): return Token("id", self.get_lexeme(), self.start_line, self.start_col)
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+
+    def s249(self):
+        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
+        return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s250(self):
         self.advance()
+        if self._match_delimiter(self.id_delim): return self.s251()
         if self.current in self.id_chars: return self.s252()
-        return self.s253()
-    
-    def s253(self):
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidIdentifier, self.get_lexeme(), self.start_line, self.start_col)
-        if self._match_delimiter(self.id_delim): return Token("id", self.get_lexeme(), self.start_line, self.start_col)
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+
+    def s251(self):
+        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
+        return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s252(self):
         self.advance()
+        if self._match_delimiter(self.id_delim): return self.s253()
         if self.current in self.id_chars: return self.s254()
-        return self.s257()
-    
-    def s257(self):  # Accepting state for 3 chars
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidIdentifier, self.get_lexeme(), self.start_line, self.start_col)
-        if self._match_delimiter(self.id_delim): return Token("id", self.get_lexeme(), self.start_line, self.start_col)
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+
+    def s253(self):
+        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
+        return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s254(self):
         self.advance()
+        if self._match_delimiter(self.id_delim): return self.s255()
         if self.current in self.id_chars: return self.s256()
-        return self.s261()
-    
-    def s261(self):  # Accepting state for 4 chars
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidIdentifier, self.get_lexeme(), self.start_line, self.start_col)
-        if self._match_delimiter(self.id_delim): return Token("id", self.get_lexeme(), self.start_line, self.start_col)
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+
+    def s255(self):
+        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
+        return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s256(self):
         self.advance()
+        if self._match_delimiter(self.id_delim): return self.s257()
         if self.current in self.id_chars: return self.s258()
-        return self.s265()
-    
-    def s265(self):
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidIdentifier, self.get_lexeme(), self.start_line, self.start_col)
-        if self._match_delimiter(self.id_delim): return Token("id", self.get_lexeme(), self.start_line, self.start_col)
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+
+    def s257(self):
+        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
+        return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s258(self):
         self.advance()
+        if self._match_delimiter(self.id_delim): return self.s259()
         if self.current in self.id_chars: return self.s260()
-        return self.s269()
-    
-    def s269(self): 
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidIdentifier, self.get_lexeme(), self.start_line, self.start_col)
-        if self._match_delimiter(self.id_delim): return Token("id", self.get_lexeme(), self.start_line, self.start_col)
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+
+    def s259(self):
+        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
+        return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s260(self):
         self.advance()
+        if self._match_delimiter(self.id_delim): return self.s261()
         if self.current in self.id_chars: return self.s262()
-        return self.s273()
-    
-    def s273(self):  # Accepting state for 7 chars
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidIdentifier, self.get_lexeme(), self.start_line, self.start_col)
-        if self._match_delimiter(self.id_delim): return Token("id", self.get_lexeme(), self.start_line, self.start_col)
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+
+    def s261(self):
+        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
+        return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s262(self):
         self.advance()
+        if self._match_delimiter(self.id_delim): return self.s263()
         if self.current in self.id_chars: return self.s264()
-        return self.s277()
-    
-    def s277(self):  # Accepting state for 8 chars
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidIdentifier, self.get_lexeme(), self.start_line, self.start_col)
-        if self._match_delimiter(self.id_delim): return Token("id", self.get_lexeme(), self.start_line, self.start_col)
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+
+    def s263(self):
+        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
+        return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s264(self):
         self.advance()
+        if self._match_delimiter(self.id_delim): return self.s265()
         if self.current in self.id_chars: return self.s266()
-        return self.s281()
-    
-    def s281(self):  # Accepting state for 9 chars
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidIdentifier, self.get_lexeme(), self.start_line, self.start_col)
-        if self._match_delimiter(self.id_delim): return Token("id", self.get_lexeme(), self.start_line, self.start_col)
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+
+    def s265(self):
+        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
+        return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s266(self):
         self.advance()
+        if self._match_delimiter(self.id_delim): return self.s267()
         if self.current in self.id_chars: return self.s268()
-        return self.s285()
-    
-    def s285(self):  # Accepting state for 10 chars
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidIdentifier, self.get_lexeme(), self.start_line, self.start_col)
-        if self._match_delimiter(self.id_delim): return Token("id", self.get_lexeme(), self.start_line, self.start_col)
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+
+    def s267(self):
+        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
+        return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s268(self):
         self.advance()
+        if self._match_delimiter(self.id_delim): return self.s269()
         if self.current in self.id_chars: return self.s270()
-        return self.s289()
-    
-    def s289(self):  # Accepting state for 11 chars
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidIdentifier, self.get_lexeme(), self.start_line, self.start_col)
-        if self._match_delimiter(self.id_delim): return Token("id", self.get_lexeme(), self.start_line, self.start_col)
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+
+    def s269(self):
+        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
+        return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s270(self):
         self.advance()
+        if self._match_delimiter(self.id_delim): return self.s271()
         if self.current in self.id_chars: return self.s272()
-        return self.s293()
-    
-    def s293(self):  # Accepting state for 12 chars
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidIdentifier, self.get_lexeme(), self.start_line, self.start_col)
-        if self._match_delimiter(self.id_delim): return Token("id", self.get_lexeme(), self.start_line, self.start_col)
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+
+    def s271(self):
+        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
+        return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s272(self):
         self.advance()
+        if self._match_delimiter(self.id_delim): return self.s273()
         if self.current in self.id_chars: return self.s274()
-        return self.s297()
-    
-    def s297(self):  # Accepting state for 13 chars
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidIdentifier, self.get_lexeme(), self.start_line, self.start_col)
-        if self._match_delimiter(self.id_delim): return Token("id", self.get_lexeme(), self.start_line, self.start_col)
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+
+    def s273(self):
+        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
+        return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s274(self):
         self.advance()
+        if self._match_delimiter(self.id_delim): return self.s275()
         if self.current in self.id_chars: return self.s276()
-        return self.s278()
-    
-    def s278(self):  # Accepting state for 14 chars
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidIdentifier, self.get_lexeme(), self.start_line, self.start_col)
-        if self._match_delimiter(self.id_delim): return Token("id", self.get_lexeme(), self.start_line, self.start_col)
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+
+    def s275(self):
+        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
+        return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s276(self):
         self.advance()
-        if self.current in self.id_chars: return self.s280()
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidIdentifier, self.get_lexeme(), self.start_line, self.start_col)
-        if self._match_delimiter(self.id_delim): return Token("id", self.get_lexeme(), self.start_line, self.start_col)
+        if self._match_delimiter(self.id_delim): return self.s277()
+        if self.current in self.id_chars: return self.s278()
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+
+    def s277(self):
+        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
+        return Token("id", self.get_lexeme(), self.start_line, self.start_col)
+
+    def s278(self):
+        self.advance()
+        if self._match_delimiter(self.id_delim): return self.s279()
+        if self.current in self.id_chars: return self.s280()
+        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+
+    def s279(self):
+        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
+        return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s280(self):
         self.advance()
+        if self._match_delimiter(self.id_delim): return self.s281()
         if self.current in self.id_chars: return self.s282()
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidIdentifier, self.get_lexeme(), self.start_line, self.start_col)
-        if self._match_delimiter(self.id_delim): return Token("id", self.get_lexeme(), self.start_line, self.start_col)
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+
+    def s281(self):
+        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
+        return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s282(self):
         self.advance()
+        if self._match_delimiter(self.id_delim): return self.s283()
         if self.current in self.id_chars: return self.s284()
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidIdentifier, self.get_lexeme(), self.start_line, self.start_col)
-        if self._match_delimiter(self.id_delim): return Token("id", self.get_lexeme(), self.start_line, self.start_col)
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+
+    def s283(self):
+        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
+        return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s284(self):
         self.advance()
+        if self._match_delimiter(self.id_delim): return self.s285()
         if self.current in self.id_chars: return self.s286()
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidIdentifier, self.get_lexeme(), self.start_line, self.start_col)
-        if self._match_delimiter(self.id_delim): return Token("id", self.get_lexeme(), self.start_line, self.start_col)
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+
+    def s285(self):
+        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
+        return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s286(self):
         self.advance()
+        if self._match_delimiter(self.id_delim): return self.s287()
         if self.current in self.id_chars: return self.s288()
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidIdentifier, self.get_lexeme(), self.start_line, self.start_col)
-        if self._match_delimiter(self.id_delim): return Token("id", self.get_lexeme(), self.start_line, self.start_col)
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+
+    def s287(self):
+        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
+        return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s288(self):
         self.advance()
+        if self._match_delimiter(self.id_delim): return self.s289()
         if self.current in self.id_chars: return self.s290()
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidIdentifier, self.get_lexeme(), self.start_line, self.start_col)
-        if self._match_delimiter(self.id_delim): return Token("id", self.get_lexeme(), self.start_line, self.start_col)
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+
+    def s289(self):
+        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
+        return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s290(self):
         self.advance()
+        if self._match_delimiter(self.id_delim): return self.s291()
         if self.current in self.id_chars: return self.s292()
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidIdentifier, self.get_lexeme(), self.start_line, self.start_col)
-        if self._match_delimiter(self.id_delim): return Token("id", self.get_lexeme(), self.start_line, self.start_col)
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+
+    def s291(self):
+        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
+        return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s292(self):
         self.advance()
+        if self._match_delimiter(self.id_delim): return self.s293()
         if self.current in self.id_chars: return self.s294()
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidIdentifier, self.get_lexeme(), self.start_line, self.start_col)
-        if self._match_delimiter(self.id_delim): return Token("id", self.get_lexeme(), self.start_line, self.start_col)
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+
+    def s293(self):
+        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
+        return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s294(self):
         self.advance()
+        if self._match_delimiter(self.id_delim): return self.s295()
         if self.current in self.id_chars: return self.s296()
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidIdentifier, self.get_lexeme(), self.start_line, self.start_col)
-        if self._match_delimiter(self.id_delim): return Token("id", self.get_lexeme(), self.start_line, self.start_col)
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+
+    def s295(self):
+        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
+        return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s296(self):
         self.advance()
-        while self.current is not None and self.current in self.id_chars: self.advance()
-        return Token(Token.ExceedsLimit, self.get_lexeme(), self.start_line, self.start_col)
+        if self._match_delimiter(self.id_delim): return self.s297()
+        if self.current in self.id_chars:  return Token(Token.InvalidLexemeExceeds, self.get_lexeme(), self.start_line, self.start_col)
+        return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
+
+    def s297(self):
+        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
+        return Token("id", self.get_lexeme(), self.start_line, self.start_col)
