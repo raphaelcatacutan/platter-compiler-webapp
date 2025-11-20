@@ -13,7 +13,7 @@ class Lexer(LexerBase, LexerKeywords, LexerOperators, LexerIdentifier, LexerChar
 
         self.save_start()
 
-        print("current", self.current)
+        # print("current", self.current)
         if self.current == 'a' and (tok := self.s1()): return tok
         if self.current == 'b' and (tok := self.s14()): return tok
         if self.current == 'c' and (tok := self.s19()): return tok
@@ -71,7 +71,7 @@ class Lexer(LexerBase, LexerKeywords, LexerOperators, LexerIdentifier, LexerChar
             if not tok: break
             if isinstance(tok, list): tokens.extend(tok)
             else: tokens.append(tok)
-            print("Counter:", counter)
-            print("Token:", tok, "\n\n\n")
+            # print("Counter:", counter)
+            # print("Token:", tok, "\n\n\n")
             counter += 1
         return tokens
