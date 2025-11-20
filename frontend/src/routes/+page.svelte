@@ -236,24 +236,48 @@ serve piece of start() {
 			}
 
 			if (invalidTokens.length) {
-				// Combine consecutive invalid lexeme + invalid character into single error
+				// Format error messages based on token type
 				const combinedErrors: TermMsg[] = [];
 				let i = 0;
 
 				while (i < invalidTokens.length) {
 					const current = invalidTokens[i];
-					const next = invalidTokens[i + 1];
+					let errorText = '';
 
-					// Check if current is Invalid Identifier and next is Invalid Character on same line
-					const isInvalidIdentifier = current.type === 'Invalid Identifier';
-					const isNextInvalidChar = next && next.type === 'Invalid Character';
-					const sameLine = next && current.line === next.line;
+					if (current.type === 'Invalid Character') {
+						// Format: Error at line X col Y - Invalid Character: <character>
+						errorText = `Error at line ${current.line} col ${current.col} - Invalid Character: ${current.value}`;
+					} else if (current.type === 'Invalid Identifier') {
+						// Format: Error at line X col Y - Invalid Lexeme: <RW> cannot be an identifier
+						errorText = `Error at line ${current.line} col ${current.col} - Invalid Lexeme: ${current.value} cannot be an identifier`;
+					} else if (current.type === 'Invalid Lexeme') {
+						// Format: Error at line X col Y - Invalid Lexeme: <invalid lexeme>
+						errorText = `Error at line ${current.line} col ${current.col} - Invalid Lexeme: ${current.value}`;
+					} else if (current.type.toLowerCase().startsWith('exceeds')) {
+						// Determine if it's an identifier or literal based on first character
+						const firstChar = current.value?.charAt(0) || '';
+						const isIdentifier = /[a-zA-Z_]/.test(firstChar);
+						const isLiteral = /[0-9]/.test(firstChar);
 
-				
-					// Regular error message
+						let limitType = '';
+						if (isIdentifier) {
+							limitType = 'id';
+						} else if (isLiteral) {
+							limitType = 'piece/sip literal';
+						} else {
+							limitType = 'value';
+						}
+
+						// Format: Error at line X col Y - Invalid Lexeme: <value> exceeds <type> limit
+						errorText = `Error at line ${current.line} col ${current.col} - Invalid Lexeme: ${current.value} exceeds ${limitType} limit`;
+					} else {
+						// Fallback for any other error types
+						errorText = `Error at line ${current.line} col ${current.col} - ${current.type}: ${current.value}`;
+					}
+
 					combinedErrors.push({
 						icon: errorIcon,
-						text: `Error at line ${current.line} col ${current.col} - ${current.type}: ${current.value}`
+						text: errorText
 					});
 					i += 1;
 				}
