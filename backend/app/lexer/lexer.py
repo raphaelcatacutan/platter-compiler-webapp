@@ -13,6 +13,7 @@ class Lexer(LexerBase, LexerKeywords, LexerOperators, LexerIdentifier, LexerChar
 
         self.save_start()
 
+        print("current", self.current)
         if self.current == 'a' and (tok := self.s1()): return tok
         if self.current == 'b' and (tok := self.s14()): return tok
         if self.current == 'c' and (tok := self.s19()): return tok
@@ -64,9 +65,13 @@ class Lexer(LexerBase, LexerKeywords, LexerOperators, LexerIdentifier, LexerChar
     def tokenize(self):
         """Returns a list of all tokens from the input text."""
         tokens = []
+        counter = 0
         while self.current is not None:
             tok = self.s0()
             if not tok: break
             if isinstance(tok, list): tokens.extend(tok)
             else: tokens.append(tok)
+            print("Counter:", counter)
+            print("Token:", tok, "\n\n\n")
+            counter += 1
         return tokens

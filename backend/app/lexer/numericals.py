@@ -3,8 +3,6 @@ from app.lexer.token import Token
 
 
 class LexerNumericals(LexerProtocol):
-
-
     def s298(self):  # -
         self.advance()
         if self._match_delimiter(self.num_delim): return self.s299()
@@ -174,9 +172,9 @@ class LexerNumericals(LexerProtocol):
     def s329(self):  # Digit 15 (Max whole digits)
         self.advance()
         if self._match_delimiter(self.num_delim): return self.s330()
-        if self.current in self.numeric: return self._consume_invalid_numerical()
         if self.current == ".": return self.s302()
-        return [Token(Token.ExceedsLimit, self.get_lexeme(), self.start_line, self.start_col)]
+        if self.current in self.numeric: return [Token(Token.ExceedsLimit, self.get_lexeme(), self.start_line, self.start_col)]
+        return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)]
 
     def s330(self):
         return Token("piece_lit", self.get_lexeme(), self.start_line,
@@ -245,16 +243,9 @@ class LexerNumericals(LexerProtocol):
     def s343(self):  # Decimal Digit 7 (Max decimal digits)
         self.advance()
         if self._match_delimiter(self.num_delim): return self.s344()
-        if self.current in self.numeric: return self._consume_invalid_numerical()
+        if self.current in self.numeric: return [Token(Token.ExceedsLimit, self.get_lexeme(), self.start_line, self.start_col)]
         return [Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)]
 
     def s344(self):
         return Token("sip_lit", self.get_lexeme(), self.start_line,
                      self.start_col)
-
-    def _consume_invalid_numerical(self):
-        """Recursively consume all remaining digits and decimal points, then return InvalidLexeme."""
-        self.advance()
-        if self.current is not None and self.current in self.numeric or self.current == ".":
-            return self._consume_invalid_numerical()
-        return Token(Token.ExceedsLimit, self.get_lexeme(), self.start_line, self.start_col)
