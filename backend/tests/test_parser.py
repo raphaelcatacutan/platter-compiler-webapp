@@ -5,8 +5,8 @@ import subprocess
 
 samples_dir = "./tests/lexer_programs/"
 
-# def set_clipboard(text: str):
-    # subprocess.run("clip", universal_newlines=True, input=text)
+def set_clipboard(text: str):
+    subprocess.run("clip", universal_newlines=True, input=text)
 
 def run_script():
   choice = input("Include whitespace tokens (y/n)? ").lower().strip()
@@ -26,11 +26,11 @@ def run_script():
       t for t in tokens
       if t.type not in ("comment", "space", "newline", "tab") or include_whitespace
   ]
-  # for t in tokens:
-    #  print(t)
+  for t in tokens:
+     print(t)
   # print("\n\nTOKENS:")
   # pprint(tokens)
-  # set_clipboard(("\n".join(t.type for t in tokens)))
+  set_clipboard(("\n".join(t.type for t in tokens)))
 
 if __name__=="__main__":
   run_script()
