@@ -39,13 +39,6 @@ class LexerBase:
         self.ascii_1 = [c for c in self.ascii if c not in ['\\', '"']]
         self.ascii_2 = self.ascii + ['\t']
         self.ascii_3 = [c for c in self.ascii if c != '#'] + ['\n', '\t']
-        self.KEYWORDS = [
-            "alt", "and", "append", "bill", "chars", "check", "choice", "copy", "cut",
-            "fact", "flag", "instead", "matches", "menu", "next", "not", "of", "or",
-            "order", "pass", "piece", "pow", "prepare", "rand", "remove", "repeat",
-            "reverse", "search", "serve", "sip", "size", "sort", "sqrt", "start",
-            "stop", "table", "take", "tochars", "topiece", "tosip", "usual"
-        ]
 
         self.colon_dlm = self.whitespace + [':']
         self.curly_dlm = self.whitespace + ['{']

@@ -10,7 +10,6 @@ class LexerIdentifier(LexerProtocol):
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
     def s249(self):
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
         return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s250(self):
@@ -20,7 +19,6 @@ class LexerIdentifier(LexerProtocol):
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
     def s251(self):
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
         return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s252(self):
@@ -30,7 +28,6 @@ class LexerIdentifier(LexerProtocol):
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
     def s253(self):
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
         return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s254(self):
@@ -40,7 +37,6 @@ class LexerIdentifier(LexerProtocol):
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
     def s255(self):
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
         return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s256(self):
@@ -50,7 +46,6 @@ class LexerIdentifier(LexerProtocol):
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
     def s257(self):
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
         return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s258(self):
@@ -60,7 +55,6 @@ class LexerIdentifier(LexerProtocol):
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
     def s259(self):
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
         return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s260(self):
@@ -70,7 +64,6 @@ class LexerIdentifier(LexerProtocol):
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
     def s261(self):
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
         return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s262(self):
@@ -80,7 +73,6 @@ class LexerIdentifier(LexerProtocol):
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
     def s263(self):
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
         return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s264(self):
@@ -90,7 +82,6 @@ class LexerIdentifier(LexerProtocol):
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
     def s265(self):
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
         return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s266(self):
@@ -100,7 +91,6 @@ class LexerIdentifier(LexerProtocol):
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
     def s267(self):
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
         return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s268(self):
@@ -110,7 +100,6 @@ class LexerIdentifier(LexerProtocol):
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
     def s269(self):
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
         return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s270(self):
@@ -120,7 +109,6 @@ class LexerIdentifier(LexerProtocol):
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
     def s271(self):
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
         return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s272(self):
@@ -130,7 +118,6 @@ class LexerIdentifier(LexerProtocol):
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
     def s273(self):
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
         return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s274(self):
@@ -140,7 +127,6 @@ class LexerIdentifier(LexerProtocol):
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
     def s275(self):
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
         return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s276(self):
@@ -150,7 +136,6 @@ class LexerIdentifier(LexerProtocol):
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
     def s277(self):
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
         return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s278(self):
@@ -160,7 +145,6 @@ class LexerIdentifier(LexerProtocol):
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
     def s279(self):
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
         return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s280(self):
@@ -170,7 +154,6 @@ class LexerIdentifier(LexerProtocol):
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
     def s281(self):
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
         return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s282(self):
@@ -180,7 +163,6 @@ class LexerIdentifier(LexerProtocol):
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
     def s283(self):
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
         return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s284(self):
@@ -190,7 +172,6 @@ class LexerIdentifier(LexerProtocol):
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
     def s285(self):
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
         return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s286(self):
@@ -200,7 +181,6 @@ class LexerIdentifier(LexerProtocol):
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
     def s287(self):
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
         return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s288(self):
@@ -210,7 +190,6 @@ class LexerIdentifier(LexerProtocol):
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
     def s289(self):
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
         return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s290(self):
@@ -220,7 +199,6 @@ class LexerIdentifier(LexerProtocol):
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
     def s291(self):
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
         return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s292(self):
@@ -230,7 +208,6 @@ class LexerIdentifier(LexerProtocol):
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
     def s293(self):
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
         return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s294(self):
@@ -240,7 +217,6 @@ class LexerIdentifier(LexerProtocol):
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
     def s295(self):
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
         return Token("id", self.get_lexeme(), self.start_line, self.start_col)
 
     def s296(self):
@@ -250,5 +226,4 @@ class LexerIdentifier(LexerProtocol):
         return Token(Token.InvalidLexeme, self.get_lexeme(), self.start_line, self.start_col)
 
     def s297(self):
-        if self.get_lexeme() in self.KEYWORDS: return Token(Token.InvalidLexemeReserved, self.get_lexeme(), self.start_line, self.start_col)
         return Token("id", self.get_lexeme(), self.start_line, self.start_col)
