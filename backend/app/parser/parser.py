@@ -1,11 +1,24 @@
 from app.lexer.lexer import Lexer
-from app.lexer.token import Token
 from app.parser.token_map import TOKEN_MAP
-from app.parser.first_set import FIRST_SET
 from app.parser.predict_set import PREDICT_SET
+from tests.test_parser import run_script
 import logging as log                                      
 
 log.basicConfig(level=log.INFO, format='%(levelname)s: <%(funcName)s> | %(message)s')
+
+"""
+    TODO:
+    [] Cleanup
+    [?] Additional errors
+        [/] Syntax Error: Expected '{tok}' but got '{self.current_tok}' (line '{self.current_line}', col '{self.current_col}')
+        [] Syntax Error: Unrecognizable token '{t.type}' (line '{t.line}', col '{t.col}')
+        [] Syntax Error: Expected '{tok}' (line '{t.line}', col '{t.col}')
+        [!] Syntax Error: Expected '{tok}' but got EOF (?)
+    [] Update error compilation
+    [] Connect to front-end
+
+"""
+
 
 class Parser:
     def __init__(self, tokens):
@@ -32,22 +45,18 @@ class Parser:
             self.pos += 1
             self.upd_tok_attr()
             print(f"--Consuming: {tok} -> {self.current_tok}")
-            # print(f"Current tok: {self.current_tok} | line: {self.current_line} | col: {self.current_col}")
-        else: # out of range
-            None
-            # raise SyntaxError (f"Syntax Error: Expected '{tok}' (line '{self.current_line}', col '{self.current_col}')")
+        else: 
+            self.current_tok = "EOF" # placeholder
+            # token not consumed upon matching, EOF reached 
+            raise SyntaxError (f"Syntax Error: Expected '{tok}' but got EOF")
         
-        # Syntax Error: Expected '{tok}' but got '{self.current_tok}' (line '{self.current_line}', col '{self.current_col}')
-        # Syntax Error: Unrecognizable token '{t.type}' (line '{t.line}', col '{t.col}')
-        # Syntax Error: Expected '{token_type}' (line '{t.line}', col '{t.col}')
-        # Syntax Error: Expected '{token_type}' but got EOF (?)
         
     def parse_token(self, tok):
-        if self.current_tok == TOKEN_MAP[tok]: 
-            print(f"--Expected: {tok} | Current: {self.current_tok} | MATCHED!")
+        if self.current_tok == tok: 
+            print(f"--Expected: {tok} | Current: {self.current_tok} | Remark: MATCH!")
             self.advance(tok)
         else:
-            print(f"--Expected: {tok} | Current: {self.current_tok} | INVALID!")
+            print(f"--Expected: {tok} | Current: {self.current_tok} | Remark: INVALID!")
             raise SyntaxError(
                 f"Syntax Error: Expected '{tok}' but got '{self.current_tok}' "
                 f"(line {self.current_line}, col {self.current_col})"
@@ -74,8 +83,10 @@ class Parser:
             self.global_decl()
         if self.current_tok in PREDICT_SET["<recipe_decl>"]:
             self.recipe_decl() 
-        if self.current_tok in PREDICT_SET["<recipe_decl_1>"]:
-            self.recipe_decl()
+        self.parse_token("start")
+        self.parse_token("(")
+        self.parse_token(")")
+        self.platter()
         log.info("Exit: " + self.current_tok)
             
 
@@ -727,6 +738,7 @@ class Parser:
             self.parse_token("{")
             self.local_decl()
             self.statements()
+            self.parse_token("}")
         log.info("Exit: " + self.current_tok)
 
     def local_decl(self):
@@ -1017,22 +1029,16 @@ class Parser:
 
 # Example usage
 if __name__ == "__main__":
+    # for debugging
     code = """
-    piece of a;
-    prepare piece of dish(id of sauce) {
-        piece of result;
-        result = append(a, tosip("example"));
-        serve result;
-    }
+    start()
     """
-
     lexer = Lexer(code)
     tokens = lexer.tokenize()
     parser = Parser(tokens)
 
     try:
-        # parser.parse()
+        parser.parse()
         print("Syntax OK!")
-        print(TOKEN_MAP["{"])
     except SyntaxError as e:
         print(str(e))
