@@ -53,7 +53,7 @@ class TestPlatterLexerStrings(unittest.TestCase):
             "expected_types": [
                 Token.InvalidLexeme,
                 "serve",
-                "id",
+                "flag",
                 ";"
             ]
         },
@@ -75,7 +75,7 @@ class TestPlatterLexerStrings(unittest.TestCase):
             "number": 7,
             "code": "piece+jm ,,, ; : ' ` - --2 -(0.1",
             "expected_types": [
-                "id",
+                "piece",
                 "+",
                 "id",
                 ",",
@@ -149,7 +149,7 @@ class TestPlatterLexerStrings(unittest.TestCase):
                 ";",
                 "id",
                 "<",
-                "id",
+                "piece",
                 ";",
                 "id",
                 Token.InvalidLexeme,
@@ -270,7 +270,7 @@ class TestPlatterLexerStrings(unittest.TestCase):
             "number": 20,
             "code": "piece##this should still work # ##",
             "expected_types": [
-                "id",
+                "piece",
                 "comment_multi"
             ]
         },
@@ -342,7 +342,7 @@ class TestPlatterLexerStrings(unittest.TestCase):
                 "(",
                 "alt",
                 "(",
-                "id",
+                "instead",
                 "(",
                 "pass",
                 "(",
@@ -350,7 +350,7 @@ class TestPlatterLexerStrings(unittest.TestCase):
                 "(",
                 "id",
                 "(",
-                "id",
+                "stop",
                 "(",
                 Token.InvalidLexeme
             ]
@@ -383,9 +383,9 @@ class TestPlatterLexerStrings(unittest.TestCase):
             "number": 27,
             "code": "up/down, Down, DOWN",
             "expected_types": [
-                "id",
+                "flag_lit",
                 "/",
-                "id",
+                "flag_lit",
                 ",",
                 "id",
                 ",",
@@ -719,7 +719,7 @@ class TestPlatterLexerStrings(unittest.TestCase):
             "number": 60,
             "code": "check;",
             "expected_types": [
-                "id", ";"
+                "check", ";"
             ]
         },
         {
@@ -775,7 +775,7 @@ class TestPlatterLexerStrings(unittest.TestCase):
             "number": 68,
             "code": "chars[] of a = [instead];",
             "expected_types": [
-                "chars", "[", "]", "of", "id", "=", "[", "id", "]", ";"
+                "chars", "[", "]", "of", "id", "=", "[", "instead", "]", ";"
             ]
         },
         {
@@ -829,7 +829,7 @@ class TestPlatterLexerStrings(unittest.TestCase):
             "number": 74,
             "code": "stop:",
             "expected_types": [
-                "id", ":"
+                "stop", ":"
             ]
         },
         {
@@ -993,7 +993,7 @@ class TestPlatterLexerStrings(unittest.TestCase):
             "number": 97,
             "code": "5 += piece;",
             "expected_types": [
-                "piece_lit", "+=", "id", ";"
+                "piece_lit", "+=", "piece", ";"
             ]
         },
         {
@@ -1291,7 +1291,7 @@ o\"""",
         {
             "number": 146,
             "code": "piece():1;",
-            "expected_types": ["id", "(", ")", ":", "piece_lit", ";"],
+            "expected_types": ["piece", "(", ")", ":", "piece_lit", ";"],
         },
         {
             "number": 147,
