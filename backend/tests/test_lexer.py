@@ -53,7 +53,7 @@ class TestPlatterLexerStrings(unittest.TestCase):
             "expected_types": [
                 Token.InvalidLexeme,
                 "serve",
-                Token.InvalidLexemeReserved,
+                "id",
                 ";"
             ]
         },
@@ -75,7 +75,7 @@ class TestPlatterLexerStrings(unittest.TestCase):
             "number": 7,
             "code": "piece+jm ,,, ; : ' ` - --2 -(0.1",
             "expected_types": [
-                Token.InvalidLexemeReserved,
+                "id",
                 "+",
                 "id",
                 ",",
@@ -149,7 +149,7 @@ class TestPlatterLexerStrings(unittest.TestCase):
                 ";",
                 "id",
                 "<",
-                Token.InvalidLexemeReserved,
+                "id",
                 ";",
                 "id",
                 Token.InvalidLexeme,
@@ -270,7 +270,7 @@ class TestPlatterLexerStrings(unittest.TestCase):
             "number": 20,
             "code": "piece##this should still work # ##",
             "expected_types": [
-                Token.InvalidLexemeReserved,
+                "id",
                 "comment_multi"
             ]
         },
@@ -342,7 +342,7 @@ class TestPlatterLexerStrings(unittest.TestCase):
                 "(",
                 "alt",
                 "(",
-                Token.InvalidLexemeReserved,
+                "id",
                 "(",
                 "pass",
                 "(",
@@ -350,7 +350,7 @@ class TestPlatterLexerStrings(unittest.TestCase):
                 "(",
                 "id",
                 "(",
-                Token.InvalidLexemeReserved,
+                "id",
                 "(",
                 Token.InvalidLexeme
             ]
@@ -719,7 +719,7 @@ class TestPlatterLexerStrings(unittest.TestCase):
             "number": 60,
             "code": "check;",
             "expected_types": [
-                "Invalid Lexeme Reserved", ";"
+                "id", ";"
             ]
         },
         {
@@ -775,7 +775,7 @@ class TestPlatterLexerStrings(unittest.TestCase):
             "number": 68,
             "code": "chars[] of a = [instead];",
             "expected_types": [
-                "chars", "[", "]", "of", "id", "=", "[", "Invalid Lexeme Reserved", "]", ";"
+                "chars", "[", "]", "of", "id", "=", "[", "id", "]", ";"
             ]
         },
         {
@@ -829,7 +829,7 @@ class TestPlatterLexerStrings(unittest.TestCase):
             "number": 74,
             "code": "stop:",
             "expected_types": [
-                "Invalid Lexeme Reserved", ":"
+                "id", ":"
             ]
         },
         {
@@ -857,14 +857,14 @@ class TestPlatterLexerStrings(unittest.TestCase):
             "number": 78,
             "code": "prepare:",
             "expected_types": [
-                "Invalid Lexeme Reserved", ":"
+                "id", ":"
             ]
         },
         {
             "number": 79,
             "code": "choice(",
             "expected_types": [
-                "Invalid Lexeme Reserved", "("
+                "id", "("
             ]
         },
         {
@@ -993,7 +993,7 @@ class TestPlatterLexerStrings(unittest.TestCase):
             "number": 97,
             "code": "5 += piece;",
             "expected_types": [
-                "piece_lit", "+=", "Invalid Lexeme Reserved", ";"
+                "piece_lit", "+=", "id", ";"
             ]
         },
         {
@@ -1291,7 +1291,7 @@ o\"""",
         {
             "number": 146,
             "code": "piece():1;",
-            "expected_types": [Token.InvalidLexemeReserved, "(", ")", ":", "piece_lit", ";"],
+            "expected_types": ["id", "(", ")", ":", "piece_lit", ";"],
         },
         {
             "number": 147,
